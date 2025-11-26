@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Địt Mẹ Mày - ANH VINH V10</title>
+    <title>mthuyctevcl</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
 <style>
         /* FIX LỖI KÉO XUỐN`G/ZOOM TRIỆT ĐỂ */
@@ -114,6 +114,12 @@
             animation: floatForever var(--animation-duration) infinite ease-in-out alternate; 
             opacity: 0.8; 
         }
+
+        @keyframes floatForever {
+            0% { transform: translate(0, 0) rotate(0deg) scale(var(--heart-scale, 1)); }
+            50% { transform: translate(15vw, 15vh) rotate(8deg) scale(calc(var(--heart-scale, 1) * 1.1)); } 
+            100% { transform: translate(-15vw, -15vh) rotate(-8deg) scale(var(--heart-scale, 1)); }
+        }
         
         /* LỚP PHỦ CHỮ BAY MÀU HỒNG (QUỸ ĐẠO HÌNH TRÒN CHẠY) */
         #flying-text-effect {
@@ -147,6 +153,66 @@
             animation: pinkTextFlyAndCircle 7s ease-out forwards; 
         }
         
+        /* Keyframe mới cho quỹ đạo hình tròn chạy từ trên xuống */
+        @keyframes pinkTextFlyAndCircle {
+            0% { 
+                transform: translate(-50%, 0) rotate(0deg) scale(0.8); 
+                opacity: 0; 
+            }
+            5% { 
+                opacity: 1; 
+            }
+            30% { 
+                transform: translate(10vw, 30vh) rotate(360deg) scale(1.0); 
+                opacity: 1; 
+            }
+            60% { 
+                transform: translate(-10vw, 60vh) rotate(720deg) scale(1.0); 
+                opacity: 1; 
+            }
+            90% { 
+                opacity: 0.5; 
+            }
+            100% { 
+                transform: translate(-50%, 120vh) rotate(720deg) scale(0.5); 
+                opacity: 0; 
+            }
+        }
+        
+        /* Keyframe cho sticker (đảm bảo nó xoay độc lập) */
+        @keyframes stickerRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ VÀ BAY ĐI */
+        #unwrapped-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            max-width: 80vw; 
+            max-height: 80vh;
+            border: 5px solid #ffccff; 
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            display: none; 
+            z-index: 100;
+            object-fit: contain; 
+            will-change: transform, opacity;
+            transition: none; 
+        }
+        
+        /* Animation bay của ảnh (ĐÃ CHỈNH 5 GIÂY) */
+        .image-flying-out {
+            animation: imageFlyOut 5s ease-in forwards; /* 5s bay */
+        }
+
+        @keyframes imageFlyOut {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(50vw, 50vh) scale(0.5); opacity: 0.8; }
+            100% { transform: translate(-50%, 150vh) scale(0.1); opacity: 0; } 
+        }
+
         /* HỘP QUÀ CỦA ANH VINH - ĐẸP NHƯ ẢNH GỬI! */
         #gift-box {
             position: fixed;
@@ -169,144 +235,7 @@
             position: relative; 
         }
         
-        /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ VÀ BAY ĐI */
-        #unwrapped-image {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            max-width: 80vw; 
-            max-height: 80vh;
-            border: 5px solid #ffccff; 
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
-            display: none; 
-            z-index: 100;
-            object-fit: contain; 
-            will-change: transform, opacity;
-            transition: none; 
-        }
-        
-        /* Animation bay của ảnh (ĐÃ CHỈNH 5 GIÂY) */
-        .image-flying-out {
-            animation: imageFlyOut 5s ease-in forwards; 
-        }
-        
-        /* --- RÈM ĐEN KÉO RA (MỚI) --- */
-        #black-curtain-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000; /* Luôn ở trên cùng */
-            background: none;
-            pointer-events: auto; /* Cho phép click */
-        }
-        
-        /* Thiết kế 2 nửa rèm */
-        .curtain-half {
-            position: absolute;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 1.0); /* Màu đen đặc */
-            transition: transform 1s ease-out, opacity 0.5s; /* Thời gian kéo rèm */
-        }
-        
-        #curtain-left {
-            left: 0;
-            transform: translateX(0);
-        }
-        
-        #curtain-right {
-            right: 0;
-            transform: translateX(0);
-        }
-
-        /* Class kích hoạt kéo rèm */
-        .curtain-left-open {
-            transform: translateX(-100%);
-        }
-        
-        .curtain-right-open {
-            transform: translateX(100%);
-        }
-        
-        /* Nội dung ở giữa rèm */
-        #curtain-content {
-            position: relative;
-            z-index: 10001; /* Trên rèm */
-            text-align: center;
-            color: #fff;
-            padding: 10px 15px; 
-            max-width: 250px; 
-            width: 85%; 
-            box-sizing: border-box;
-            background: none; /* Nội dung không cần nền */
-            
-            /* Thông báo nhỏ hơn, không viền, không bóng đổ (pulse) */
-            border: none;
-            box-shadow: none;
-            animation: none;
-        }
-
-        #curtain-content h1 {
-            color: #ff00ea; 
-            font-size: 1.1em; 
-            text-shadow: 0 0 6px #ff00ea; 
-            margin: 0 0 4px 0; 
-            font-weight: bold; 
-            white-space: normal; 
-        }
-
-        #curtain-content p {
-            color: #00ff41;
-            font-size: 0.8em; 
-            margin: 4px 0 10px 0; 
-            font-weight: bold;
-            text-shadow: 0 0 2px #00ff41; 
-            white-space: normal; 
-        }
-
-        #curtain-content button {
-            background-color: #CC0000; 
-            color: #ffffff;
-            border: none;
-            padding: 6px 12px; 
-            margin-top: 8px;
-            font-size: 0.8em; 
-            font-weight: bold; 
-            border-radius: 3px; 
-            cursor: pointer;
-            box-shadow: 0 0 4px #CC0000; 
-            transition: background-color 0.2s;
-        }
-
-        /* --- CSS HỘP QUÀ và ẢNH (GIỮ NGUYÊN) --- */
-        #gift-box {
-            position: fixed;
-            width: 120px; 
-            height: 100px;
-            background-color: #F8BBD0; 
-            border: 1px solid #E91E63; 
-            border-radius: 8px;
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.4); 
-            z-index: 98; 
-            top: -150px; 
-            left: 50%;
-            transform: translateX(-50%);
-            animation: giftFall 1.5s ease-out forwards; 
-            background-image: linear-gradient(135deg, #F8BBD0 0%, #F48FB1 100%);
-            position: relative; 
-        }
-        
+        /* Nắp hộp quà */
         #gift-box::before {
             content: '';
             position: absolute;
@@ -322,6 +251,7 @@
             background-image: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
         }
 
+        /* Ribbon dọc */
         #gift-box::after {
             content: '';
             position: absolute;
@@ -332,6 +262,7 @@
             box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
         }
 
+        /* Ribbon ngang */
         #gift-box .ribbon-h {
             position: absolute;
             width: 100%;
@@ -341,6 +272,7 @@
             box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
         }
 
+        /* Nơ (bow) giả lập bằng CSS */
         #gift-box .bow-left, #gift-box .bow-right {
             content: '';
             position: absolute;
@@ -359,24 +291,96 @@
             left: calc(50% - 5px); 
         }
 
+        /* Animation rơi thẳng */
         @keyframes giftFall {
             0% { top: -150px; opacity: 0; }
             50% { opacity: 1; }
             100% { top: calc(50% - 50px); opacity: 1; } 
+        }
+        
+        /* CSS cho lớp phủ chính (Đã fix lỗi hiển thị, nhỏ hơn, không viền) */
+        #click-to-play-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100vh; 
+            z-index: 9999; 
+            background: rgba(0,0,0,0.9); 
+            cursor: pointer;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box; 
+            padding: 10px; 
+        }
+        
+        #overlay-content {
+            text-align: center;
+            padding: 10px 15px; 
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 6px; 
+            border: none; 
+            animation: pulsePinkOverlay 1.5s infinite alternate; 
+            max-width: 250px; 
+            width: 85%; 
+            box-sizing: border-box;
+        }
+        
+        #overlay-text h1 {
+            color: #ff00ea; 
+            font-size: 1.1em; 
+            text-shadow: 0 0 6px #ff00ea; 
+            user-select: none;
+            margin: 0 0 4px 0; 
+            font-weight: bold; 
+            word-wrap: break-word; 
+            white-space: normal; 
+        }
+
+        #overlay-text p {
+            color: #00ff41;
+            font-size: 0.8em; 
+            margin: 4px 0 10px 0; 
+            font-weight: bold;
+            text-shadow: 0 0 2px #00ff41; 
+            word-wrap: break-word; 
+            white-space: normal; 
+        }
+
+        #overlay-text button {
+            background-color: #CC0000; 
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px; 
+            margin-top: 8px;
+            font-size: 0.8em; 
+            font-weight: bold; 
+            border-radius: 3px; 
+            cursor: pointer;
+            box-shadow: 0 0 4px #CC0000; 
+            transition: background-color 0.2s;
+        }
+        #overlay-text button:hover {
+            background-color: #ff0000;
+        }
+
+        @keyframes pulsePinkOverlay {
+            from { box-shadow: 0 0 4px #ffccff; } 
+            to { box-shadow: 0 0 10px #ffccff; } 
         }
 
     </style>
 </head>
 <body>
     
-<div id="black-curtain-container">
-    <div id="curtain-left" class="curtain-half"></div>
-    <div id="curtain-right" class="curtain-half"></div>
-    
-    <div id="curtain-content">
-        <h1>Dành Riêng Cho Mthuy Bấm Vào Đây</h1>
-        <p>chúc mt 26/11 vui vẻ =)))</p>
-        <button id="ok-button" onclick="handleCurtainOpen()">OK</button>
+<div id="click-to-play-overlay">
+    <div id="overlay-content">
+        <div id="overlay-text">
+            <h1>Dành Riêng Cho Mthuy Code Độc Quyền🇻🇳</h1>
+            <p>chúc mt 26/11 vui vẻ 🗿</p>
+        </div>
+        <button id="ok-button" onclick="unlockMusic()">mt bấm vào đây nè</button>
     </div>
 </div>
 
@@ -410,7 +414,7 @@
     const ADDITIONAL_IMAGE_SRC = 'https://i.postimg.cc/3rCBVqzb/IMG-2787.jpg'; // Link ảnh mới
 
     let stickerRainInterval;
-    let imageDropCounter = 0; 
+    let imageDropCounter = 0; // Để đếm và luân phiên ảnh rơi
 
     function createNewFallingSticker(imageUrl = NEW_STICKER_URL, isImageReborn = false) {
         const duration = 10 + Math.random() * 7; 
@@ -418,9 +422,11 @@
         let size, scale;
 
         if (isImageReborn) {
+            // Ảnh rơi (cũ và mới) sẽ có kích thước từ 70px đến 100px
             size = 70 + Math.random() * 30; 
-            scale = 0.6 + Math.random() * 0.4; 
+            scale = 0.6 + Math.random() * 0.4; // Scale lớn hơn, bắt đầu 0.6-1.0
         } else {
+            // Giữ nguyên kích thước nhỏ cho sticker GIF
             size = 25 + Math.random() * 40; 
             scale = 0.6 + Math.random() * 0.4; 
         }
@@ -453,45 +459,24 @@
 
             // Sau mỗi lần tạo sticker, kiểm tra để tạo ảnh rơi (cũ hoặc mới)
             imageDropCounter++;
-            if (imageDropCounter % 2 === 0) { 
+            if (imageDropCounter % 2 === 0) { // Cứ 2 lần thì tạo 1 ảnh rơi
                 createNewFallingSticker(UNWRAPPED_IMAGE_SRC, true); 
             } else {
                 createNewFallingSticker(ADDITIONAL_IMAGE_SRC, true);
             }
-        }, 800); 
+        }, 800); // Tạo sticker hoặc ảnh mỗi 0.8 giây để đều và nhiều hơn
     }
 
     let isMusicUnlocked = false; 
 
-    // HÀM MỚI XỬ LÝ KÉO RÈM
-    function handleCurtainOpen() {
-        const curtainLeft = document.getElementById('curtain-left');
-        const curtainRight = document.getElementById('curtain-right');
-        const curtainContainer = document.getElementById('black-curtain-container');
-        const curtainContent = document.getElementById('curtain-content');
-
-        // Ẩn nội dung thông báo ngay lập tức
-        curtainContent.style.opacity = '0';
-        curtainContent.style.transition = 'opacity 0.2s';
-
-        // Kéo rèm ra hai bên
-        curtainLeft.classList.add('curtain-left-open');
-        curtainRight.classList.add('curtain-right-open');
-
-        // Sau khi rèm kéo xong (1s), phát nhạc và xóa container
-        setTimeout(() => {
-            unlockMusic(); // Phát nhạc và kích hoạt hiệu ứng tiếp theo
-
-            // Xóa container rèm sau khi hiệu ứng hoàn thành
-            curtainContainer.remove(); 
-
-        }, 1000); // 1s là thời gian transition của rèm
-    }
-
-
     function unlockMusic() {
+        const overlay = document.getElementById('click-to-play-overlay');
         const flyingTextEffect = document.getElementById('flying-text-effect');
         
+        if (overlay) {
+            overlay.remove(); 
+        }
+
         if (player && !isMusicUnlocked) {
             player.playVideo();
             playNextRandomMusic(true);
@@ -500,12 +485,11 @@
             if (flyingTextEffect) { 
                 flyingTextEffect.classList.add('active-flying-effect');
                 
-                // Sau khi chữ bay xong, hiển thị hộp quà
                 flyingTextEffect.addEventListener('animationend', () => {
-                    flyingTextEffect.remove(); // Xóa chữ bay
+                    flyingTextEffect.remove(); 
                     const giftBox = document.getElementById('gift-box');
                     if (giftBox) {
-                        giftBox.style.display = 'block'; // Hiển thị hộp quà
+                        giftBox.style.display = 'block'; 
                     }
                 }, { once: true });
             }
