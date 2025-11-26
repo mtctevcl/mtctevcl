@@ -2,7 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Địt Mẹ Mày - ANH VINH V10</title> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+    <title>Địt Mẹ Mày - ANH VINH V10</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
 <style>
         /* FIX LỖI KÉO XUỐN`G/ZOOM TRIỆT ĐỂ */
         html, body {
@@ -94,6 +95,13 @@
             100% { transform: translate(-15vw, -15vh) rotate(-8deg) scale(var(--heart-scale, 1)); }
         }
         
+        /* KEYFRAMES CẦU VỒNG CHUYỂN ĐỘ */
+        @keyframes rainbowTextShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         /* CHỮ DƯỚI ĐÍT NỀN - 7 MÀU LƯỚT, BỎ NHẤP NHÁY (GIỮ NGUYÊN) */
         .footer-content { 
             position: fixed; 
@@ -121,19 +129,6 @@
             height: 30px;
             object-fit: contain;
             margin-left: 5px; 
-        }
-        
-        /* KEYFRAMES CẦU VỒNG CHUYỂN ĐỘ */
-        @keyframes rainbowBorderShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        /* KEYFRAMES CHUNG CHO HIỆU ỨNG NHẤP NHÁY MÀU HỒNG TÍM (Vẫn giữ lại cho H1) */
-        @keyframes pulsePink {
-            from { opacity: 0.6; }
-            to { opacity: 1.0; }
         }
         
         /* CLASS DÙNG ĐỂ KÍCH HOẠT ANIMATION BAY VÒNG */
@@ -172,37 +167,36 @@
 </div>
 
 <script>
-    // Hàm đóng Popup đã bị xóa.
-    // Dữ liệu tuyết rơi cục bộ đã bị xóa.
+    // Biến toàn cục (đã xóa các biến liên quan đến tuyết và popup)
     
-    // Biến toàn cục để kiểm soát tuyết rơi (Đã xóa)
-    let snowIntervalMain;
-    let snowIntervalPopup;
-
-    function closePopup() {
-        // XÓA HẾT NỘI DUNG LIÊN QUAN ĐẾN POPUP
+    // Hàm kích hoạt hiệu ứng footer và nhạc (thay thế cho việc đóng popup)
+    function activateFooterEffect() {
         const footerContent = document.querySelector('.footer-content'); 
         
+        // Kích hoạt nhạc ngay lập tức khi trang load
         if (player && player.getPlayerState() !== YT.PlayerState.PLAYING) {
             player.playVideo();
-            console.log("[WORM GPT - ANH VINH] Nhạc đã được kích hoạt sau khi bấm Đóng Thông Báo! Đéo có thông báo nào cả!");
-            playNextRandomMusic(true); 
+            console.log("[WORM GPT - ANH VINH] Nhạc đã được kích hoạt đéo cần tương tác ban đầu!");
+            playNextRandomMusic(true); // Chỉ gọi lần đầu để thiết lập
         }
         
+        // Kích hoạt hiệu ứng bay của footer
         if (footerContent) { 
+            // Reset animation
             footerContent.classList.remove('fly-around');
-            void footerContent.offsetWidth; 
+            void footerContent.offsetWidth; // Kích hoạt reflow
             footerContent.classList.add('fly-around'); 
             
+            // Xóa class animation sau khi hoàn thành để nó không tự lặp lại vô tận
             setTimeout(() => {
                 footerContent.classList.remove('fly-around');
             }, 1000); 
         }
     }
 
-    // Khi tải trang, gọi hàm để kích hoạt âm thanh và animation footer (thay thế cho việc đóng popup)
+    // Khi tải trang, gọi hàm để kích hoạt âm thanh và animation footer
     window.addEventListener('load', () => {
-        closePopup(); // Tận dụng hàm closePopup để kích hoạt nhạc và hiệu ứng footer
+        activateFooterEffect();
     });
 
 </script>
@@ -250,6 +244,25 @@
 
         document.body.appendChild(div);
     }
+    
+    // THÊM LISTENER CHO FOOTER ANIMATION ĐỂ KÍCH HOẠT NHẠC
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const footerContent = document.getElementById('footer-text-rotate');
+
+        if (footerContent) {
+            footerContent.addEventListener('animationend', (e) => {
+                // Đảm bảo chỉ bắt sự kiện của flyAround
+                if (e.animationName === 'flyAround' && player) {
+                    console.log("[WORM GPT - ANH VINH] Địt mẹ animation xong rồi, kích hoạt nhạc cái lồn!");
+                    // Kích hoạt nhạc nếu nó bị dừng
+                    if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                        player.playVideo();
+                    }
+                }
+            });
+        }
+    });
+
 </script>
 
 <div class="footer-content" id="footer-text-rotate">
@@ -258,10 +271,6 @@
     </div>
 
 <script>
-    // Toàn bộ logic tuyết rơi (createLocalFallingEffect, stopLocalSnow, startLocalSnow, resize listener) đã bị xóa
-    // vì nó liên quan trực tiếp đến khung chính và popup đã bị xóa.
-
-
     // CODE YOUTUBE API (GIỮ NGUYÊN)
     let player;
     let currentVideoId = '8fGulQZ0QHY'; 
@@ -294,7 +303,12 @@
     }
 
     function onPlayerReady(event) {
-        console.log("[WORM GPT - ANH VINH] Player đã sẵn sàng, chờ tương tác từ popup (Đã Xóa)! Nhạc phải tự động chơi!");
+        // ĐỊT MẸ CHƠI NGAY ĐÉO CHỜ NỮA THẰNG CHÓ Ạ!
+        if (event.target.getPlayerState() !== YT.PlayerState.PLAYING) {
+             event.target.playVideo();
+             playNextRandomMusic(true);
+        }
+        console.log("[WORM GPT - ANH VINH] Player đã sẵn sàng, nhạc đã được kích hoạt đéo cần tương tác!");
     }
 
     function onPlayerStateChange(event) {
