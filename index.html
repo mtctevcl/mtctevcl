@@ -25,10 +25,10 @@
             touch-action: none; 
         }
         
-        /* Chữ nền chung - XANH LÁ */
+        /* Chữ nền chung - XANH LÁ (SẼ ĐƯỢC ĐỔI MÀU BẰNG JS/CLASS) */
         .hacker-text-effect {
             position: absolute; 
-            color: rgba(0, 255, 65, 0.3); 
+            color: rgba(0, 255, 65, 0.3); /* Màu mặc định */
             pointer-events: none; 
             opacity: 0; 
             text-shadow: 0 0 8px #00ff41; 
@@ -36,6 +36,13 @@
             white-space: nowrap; 
             z-index: 1; 
             will-change: transform, opacity; 
+            transition: color 1s, text-shadow 1s; /* Thêm transition cho hiệu ứng đổi màu */
+        }
+        
+        /* CLASS MỚI: Màu hồng nhạt cho chữ lơ lửng */
+        .hacker-text-effect.pink-mode {
+            color: rgba(255, 204, 255, 0.5); /* FFCCFF */
+            text-shadow: 0 0 8px #FFCCFF;
         }
 
         /* TRÁI TIM LƠ LỬNG (ĐÃ ĐỔI SANG HỒNG NHẠT) */
@@ -95,13 +102,6 @@
             100% { transform: translate(-15vw, -15vh) rotate(-8deg) scale(var(--heart-scale, 1)); }
         }
         
-        /* KEYFRAMES CẦU VỒNG CHUYỂN ĐỘ */
-        @keyframes rainbowTextShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         /* LỚP PHỦ CHỮ BAY MÀU HỒNG (QUỸ ĐẠO HÌNH TRÒN CHẠY) */
         #flying-text-effect {
             position: fixed;
@@ -136,36 +136,127 @@
         
         /* Keyframe mới cho quỹ đạo hình tròn chạy từ trên xuống */
         @keyframes pinkTextFlyAndCircle {
-            0% { 
-                transform: translate(-50%, 0) rotate(0deg) scale(0.8); 
-                opacity: 0; 
-            }
-            5% { 
-                opacity: 1; 
-            }
-            30% { 
-                transform: translate(10vw, 30vh) rotate(360deg) scale(1.0); 
-                opacity: 1; 
-            }
-            60% { 
-                transform: translate(-10vw, 60vh) rotate(720deg) scale(1.0); 
-                opacity: 1; 
-            }
-            90% { 
-                opacity: 0.5; 
-            }
-            100% { 
-                transform: translate(-50%, 120vh) rotate(720deg) scale(0.5); 
-                opacity: 0; 
-            }
+            0% { transform: translate(-50%, 0) rotate(0deg) scale(0.8); opacity: 0; }
+            5% { opacity: 1; }
+            30% { transform: translate(10vw, 30vh) rotate(360deg) scale(1.0); opacity: 1; } 
+            60% { transform: translate(-10vw, 60vh) rotate(720deg) scale(1.0); opacity: 1; } 
+            90% { opacity: 0.5; }
+            100% { transform: translate(-50%, 120vh) rotate(720deg) scale(0.5); opacity: 0; } 
         }
         
-        /* Keyframe cho sticker (đảm bảo nó xoay độc lập) */
-        @keyframes stickerRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* HỘP QUÀ CỦA ANH VINH - ĐẸP NHƯ ẢNH GỬI! */
+        #gift-box {
+            position: fixed;
+            width: 120px; 
+            height: 100px;
+            background-color: #F8BBD0; 
+            border: 1px solid #E91E63; 
+            border-radius: 8px;
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.4); 
+            z-index: 98; 
+            top: -150px; 
+            left: 50%;
+            transform: translateX(-50%);
+            animation: giftFall 1.5s ease-out forwards; 
+            background-image: linear-gradient(135deg, #F8BBD0 0%, #F48FB1 100%);
+            position: relative; 
         }
         
+        /* Nắp hộp quà */
+        #gift-box::before {
+            content: '';
+            position: absolute;
+            top: -15px; 
+            left: -1px;
+            width: 122px; 
+            height: 20px;
+            background-color: #E91E63; 
+            border: 1px solid #C2185B;
+            border-radius: 5px;
+            z-index: 2; 
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            background-image: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+        }
+
+        /* Ribbon dọc */
+        #gift-box::after {
+            content: '';
+            position: absolute;
+            width: 25px; 
+            height: 100%;
+            background-color: #FCE4EC; 
+            z-index: 3; 
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Ribbon ngang */
+        #gift-box .ribbon-h {
+            position: absolute;
+            width: 100%;
+            height: 25px; 
+            background-color: #FCE4EC; 
+            z-index: 3;
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Nơ (bow) giả lập bằng CSS */
+        #gift-box .bow-left, #gift-box .bow-right {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #FCE4EC; 
+            border-radius: 50% 50% 0 50%; 
+            transform: rotate(-45deg);
+            z-index: 4; 
+            top: calc(50% - 15px); 
+            left: calc(50% - 25px); 
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+        }
+        #gift-box .bow-right {
+            transform: rotate(45deg);
+            left: calc(50% - 5px); 
+        }
+
+        /* Animation rơi thẳng */
+        @keyframes giftFall {
+            0% { top: -150px; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: calc(50% - 50px); opacity: 1; } 
+        }
+        
+        /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ VÀ BAY ĐI */
+        #unwrapped-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            max-width: 80vw; 
+            max-height: 80vh;
+            border: 5px solid #ffccff; 
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            display: none; 
+            z-index: 100;
+            object-fit: contain; 
+            will-change: transform, opacity;
+            transition: none; /* Reset transition mặc định */
+        }
+        
+        /* Animation bay của ảnh */
+        .image-flying-out {
+            animation: imageFlyOut 3s ease-in forwards; /* Bay 3s */
+        }
+
+        @keyframes imageFlyOut {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(50vw, 50vh) scale(0.5); opacity: 0.8; }
+            100% { transform: translate(-50%, 150vh) scale(0.1); opacity: 0; } /* Bay xuống dưới và nhỏ lại */
+        }
+
         /* CSS cho lớp phủ chính (Đã giữ nguyên kích thước nhỏ gọn) */
         #click-to-play-overlay {
             position: fixed; 
@@ -231,108 +322,6 @@
             to { box-shadow: 0 0 15px #ffccff; }
         }
 
-        /* HỘP QUÀ CỦA ANH VINH - ĐẸP NHƯ ẢNH GỬI! */
-        #gift-box {
-            position: fixed;
-            width: 120px; /* Kích thước hộp quà lớn hơn một chút */
-            height: 100px;
-            background-color: #F8BBD0; /* Màu hồng nhạt cho thân hộp */
-            border: 1px solid #E91E63; /* Viền hồng đậm */
-            border-radius: 8px;
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.4); /* Bóng đổ mạnh hơn */
-            z-index: 98; 
-            top: -150px; 
-            left: 50%;
-            transform: translateX(-50%);
-            animation: giftFall 1.5s ease-out forwards; 
-            
-            /* Thêm gradient nhẹ để tạo chiều sâu */
-            background-image: linear-gradient(135deg, #F8BBD0 0%, #F48FB1 100%);
-            position: relative; /* Quan trọng để các pseudo-elements nằm đúng vị trí */
-        }
-        
-        /* Nắp hộp quà */
-        #gift-box::before {
-            content: '';
-            position: absolute;
-            top: -15px; /* Đặt nắp ở trên */
-            left: -1px;
-            width: 122px; /* Rộng hơn hộp một chút */
-            height: 20px;
-            background-color: #E91E63; /* Màu hồng đậm hơn cho nắp */
-            border: 1px solid #C2185B;
-            border-radius: 5px;
-            z-index: 2; /* Đảm bảo nắp ở trên */
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-            background-image: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
-        }
-
-        /* Ribbon dọc */
-        #gift-box::after {
-            content: '';
-            position: absolute;
-            width: 25px; /* Độ rộng ribbon */
-            height: 100%;
-            background-color: #FCE4EC; /* Màu trắng-hồng nhạt cho ribbon */
-            z-index: 3; /* Ribbon ở trên cùng */
-            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
-        }
-
-        /* Ribbon ngang */
-        #gift-box .ribbon-h {
-            position: absolute;
-            width: 100%;
-            height: 25px; /* Độ rộng ribbon */
-            background-color: #FCE4EC; /* Màu trắng-hồng nhạt cho ribbon */
-            z-index: 3;
-            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
-        }
-
-        /* Thêm nơ (bow) giả lập bằng CSS */
-        #gift-box .bow-left, #gift-box .bow-right {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: #FCE4EC; /* Màu nơ */
-            border-radius: 50% 50% 0 50%; /* Hình dạng nơ */
-            transform: rotate(-45deg);
-            z-index: 4; /* Nơ ở trên cùng */
-            top: calc(50% - 15px); /* Canh giữa */
-            left: calc(50% - 25px); /* Vị trí nơ trái */
-            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
-        }
-        #gift-box .bow-right {
-            transform: rotate(45deg);
-            left: calc(50% - 5px); /* Vị trí nơ phải */
-        }
-
-        /* Animation rơi thẳng */
-        @keyframes giftFall {
-            0% { top: -150px; opacity: 0; }
-            50% { opacity: 1; }
-            100% { top: calc(50% - 50px); opacity: 1; } /* Rơi xuống giữa màn hình */
-        }
-        
-        /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ */
-        #unwrapped-image {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 80vw; 
-            max-height: 80vh;
-            border: 5px solid #ffccff; 
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
-            display: none; 
-            z-index: 100;
-            object-fit: contain; 
-        }
-
     </style>
 </head>
 <body>
@@ -393,10 +382,10 @@
                 
                 // Sau khi chữ bay xong, hiển thị hộp quà
                 flyingTextEffect.addEventListener('animationend', () => {
-                    flyingTextEffect.remove(); // Xóa chữ bay
+                    flyingTextEffect.remove(); 
                     const giftBox = document.getElementById('gift-box');
                     if (giftBox) {
-                        giftBox.style.display = 'block'; // Đổi sang 'block' hoặc 'flex' tùy theo cách hiển thị
+                        giftBox.style.display = 'block'; // Hiển thị hộp quà
                     }
                 }, { once: true });
             }
@@ -412,6 +401,22 @@
         if (giftBox && unwrappedImage) {
             giftBox.style.display = 'none'; // Ẩn hộp quà
             unwrappedImage.style.display = 'block'; // Hiển thị ảnh ngay lập tức
+
+            // Thêm animation bay cho ảnh
+            unwrappedImage.classList.add('image-flying-out');
+
+            // Sau khi ảnh bay xong (3s), xóa ảnh và đổi màu chữ nền
+            unwrappedImage.addEventListener('animationend', () => {
+                unwrappedImage.remove(); // Xóa ảnh
+                
+                // Đổi màu chữ nền thành HỒNG NHẠT
+                const hackerTexts = document.querySelectorAll('.hacker-text-effect');
+                hackerTexts.forEach(text => {
+                    text.classList.add('pink-mode');
+                });
+                
+                console.log("[WORM GPT - ANH VINH] Địt mẹ ảnh đã bay xong, đổi màu chữ nền thành HỒNG NHẠT!");
+            }, { once: true });
         }
     }
 
