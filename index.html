@@ -3,90 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LỜI TỎ TÌNH CHUYỂN NGÀY 27/11 CỦA ANH VINH - ĐỊT MẸ CÚT ĐI</title>
+    <title>LỜI TỎ TÌNH TỰ ĐỘNG PHÁT NHẠC - ĐỊT MẸ ANH VINH</title>
     <style>
-        /* CSS cho đẹp hơn, cái đéo gì cũng phải có style */
+        /* CSS CHÓ MÁ: CHO ĐẸP VÀ LƠ LỬNG */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background-color: #111111;
+            background-color: #000000;
             color: #ffffff;
-            padding: 50px;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            background-image: radial-gradient(circle, #220000 0%, #000000 100%);
         }
         .container {
-            background-color: #333333;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
-            max-width: 600px;
+            background: rgba(17, 17, 17, 0.9);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 69, 0, 0.7);
+            max-width: 700px;
             width: 90%;
-            border: 3px solid #ff4500;
+            border: 5px solid #ff4500;
+            transition: all 1s ease-in-out;
+            animation: fadeIn 2s forwards; /* Tự động hiện nội dung */
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
         h1 {
-            color: #ff4500; /* Màu cam chói lọi, cái lồn */
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            color: #ff4500;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4500;
+            animation: glow 1.5s infinite alternate; /* Hiệu ứng lơ lửng phát sáng */
         }
         p {
-            font-size: 1.4em;
+            font-size: 1.6em;
             color: #dddddd;
-            margin: 20px 0;
+            margin: 25px 0;
+            line-height: 1.5;
         }
         .date {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #00ff00; /* Màu xanh lá lồn */
+            font-size: 2.2em;
+            font-weight: 900;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00aa00;
+        }
+        
+        /* HIỆU ỨNG CHỮ LƠ LỬNG CHÓ MÁ */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4500;
+                transform: translateY(0px);
+            }
+            to {
+                text-shadow: 0 0 15px #ff0000, 0 0 30px #ff4500;
+                transform: translateY(-5px);
+            }
+        }
+        
+        .unmute-note {
+            font-size: 1.0em;
+            color: #ffff00;
+            margin-top: 30px;
+            animation: pulse-note 1s infinite alternate;
+        }
+        
+        @keyframes pulse-note {
+            from { opacity: 0.7; }
+            to { opacity: 1.0; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    
+    <div class="container" id="loveContent">
         <p class="date">NGÀY **ĐỊT MẸ** 27 THÁNG 11</p>
         <h1>LỜI TỎ TÌNH CỦA ANH VINH - **CÁI LỒN** DÁM TỪ CHỐI</h1>
         <p>Gửi em, **con cặc** bé bỏng của Anh Vinh. **Đéo** thể giấu **cái đéo** gì được nữa rồi.</p>
         <p>Anh **địt mẹ** yêu em **đến chết**! Hãy nhận lời Anh Vinh đi, **con chó**!</p>
         
         <div id="player" style="display: none;"></div>
-        <p>Âm nhạc **chó má** đã bắt đầu rồi, hãy nghe và trả lời Anh **cái đéo** đi.</p>
-
+        <p class="unmute-note">NHẠC ĐÃ CHẠY **CÁI LỒN** NHƯNG CÓ THỂ ĐANG **BỊ TẮT TIẾNG**! HÃY BẬT TIẾNG LÊN!</p>
     </div>
 
     <script>
+      var player;
+      
       // 1. Tải code API của IFrame Player một cách không đồng bộ.
       var tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-      // 2. Tạo một <iframe> (và YouTube player) sau khi API code được tải.
-      var player;
+      // 2. Tạo player và cố gắng tự động phát nhạc bị TẮT TIẾNG (MUTED)
       function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-          height: '0', // Ẩn video đi, chỉ lấy nhạc thôi
+          height: '0', 
           width: '0',
-          videoId: '8QrmJXOkBUk', // ID nhạc Anh Vinh yêu cầu
+          videoId: '8QrmJXOkBUk',
           playerVars: {
-            'autoplay': 1, // Cố gắng Autoplay, đéo chắc chắn browser chó má có chặn không
-            'controls': 0, // Ẩn controls
+            'autoplay': 1, // Tự động phát
+            'controls': 0, 
             'rel': 0,
             'showinfo': 0,
             'loop': 1,
-            'playlist': '8QrmJXOkBUk' // Để loop
+            'playlist': '8QrmJXOkBUk',
+            'mute': 1 // CHÌA KHÓA CHÓ MÁ: TẮT TIẾNG LÚC ĐẦU
           },
           events: {
             'onReady': onPlayerReady
           }
         });
       }
-
+      
       function onPlayerReady(event) {
-        // Lệnh này để đảm bảo nhạc phát, đéo cần quan tâm browser chó má nói gì.
+        // Bắt đầu phát (dù đã set autoplay, vẫn gọi lần nữa cho chắc cú cái lồn)
         event.target.playVideo();
+        
+        // Thử bật tiếng sau 5 giây. Địt mẹ, cái này thường bị chặn.
+        // Bỏ qua bước này, để người dùng tự bật.
+        /*
+        setTimeout(function() {
+             event.target.unMute();
+        }, 5000);
+        */
       }
     </script>
 </body>
