@@ -83,6 +83,16 @@
             animation: fallAndFade var(--animation-duration) infinite linear; 
         }
 
+        /* Sticker mới rơi xuống */
+        .falling-new-sticker {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            will-change: transform, opacity;
+            z-index: 50;
+            animation: fallAndFade var(--animation-duration) infinite linear; 
+        }
+
         @keyframes fallAndFade {
             0% { transform: translate(0, 0) scale(var(--heart-scale, 1)); opacity: 0.2; } 
             10% { opacity: 0.7; }
@@ -136,14 +146,64 @@
         
         /* Keyframe mới cho quỹ đạo hình tròn chạy từ trên xuống */
         @keyframes pinkTextFlyAndCircle {
-            0% { transform: translate(-50%, 0) rotate(0deg) scale(0.8); opacity: 0; }
-            5% { opacity: 1; }
-            30% { transform: translate(10vw, 30vh) rotate(360deg) scale(1.0); opacity: 1; } 
-            60% { transform: translate(-10vw, 60vh) rotate(720deg) scale(1.0); opacity: 1; } 
-            90% { opacity: 0.5; }
-            100% { transform: translate(-50%, 120vh) rotate(720deg) scale(0.5); opacity: 0; } 
+            0% { 
+                transform: translate(-50%, 0) rotate(0deg) scale(0.8); 
+                opacity: 0; 
+            }
+            5% { 
+                opacity: 1; 
+            }
+            30% { 
+                transform: translate(10vw, 30vh) rotate(360deg) scale(1.0); 
+                opacity: 1; 
+            }
+            60% { 
+                transform: translate(-10vw, 60vh) rotate(720deg) scale(1.0); 
+                opacity: 1; 
+            }
+            90% { 
+                opacity: 0.5; 
+            }
+            100% { 
+                transform: translate(-50%, 120vh) rotate(720deg) scale(0.5); 
+                opacity: 0; 
+            }
         }
         
+        /* Keyframe cho sticker (đảm bảo nó xoay độc lập) */
+        @keyframes stickerRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ VÀ BAY ĐI */
+        #unwrapped-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            max-width: 80vw; 
+            max-height: 80vh;
+            border: 5px solid #ffccff; 
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            display: none; 
+            z-index: 100;
+            object-fit: contain; 
+            will-change: transform, opacity;
+            transition: none; 
+        }
+        
+        /* Animation bay của ảnh (ĐÃ CHỈNH 5 GIÂY) */
+        .image-flying-out {
+            animation: imageFlyOut 5s ease-in forwards; /* 5s bay */
+        }
+
+        @keyframes imageFlyOut {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(50vw, 50vh) scale(0.5); opacity: 0.8; }
+            100% { transform: translate(-50%, 150vh) scale(0.1); opacity: 0; } 
+        }
+
         /* HỘP QUÀ CỦA ANH VINH - ĐẸP NHƯ ẢNH GỬI! */
         #gift-box {
             position: fixed;
@@ -229,34 +289,6 @@
             100% { top: calc(50% - 50px); opacity: 1; } 
         }
         
-        /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ VÀ BAY ĐI */
-        #unwrapped-image {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            max-width: 80vw; 
-            max-height: 80vh;
-            border: 5px solid #ffccff; 
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
-            display: none; 
-            z-index: 100;
-            object-fit: contain; 
-            will-change: transform, opacity;
-            transition: none; /* Reset transition mặc định */
-        }
-        
-        /* Animation bay của ảnh */
-        .image-flying-out {
-            animation: imageFlyOut 3s ease-in forwards; /* Bay 3s */
-        }
-
-        @keyframes imageFlyOut {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            50% { transform: translate(50vw, 50vh) scale(0.5); opacity: 0.8; }
-            100% { transform: translate(-50%, 150vh) scale(0.1); opacity: 0; } /* Bay xuống dưới và nhỏ lại */
-        }
-
         /* CSS cho lớp phủ chính (Đã giữ nguyên kích thước nhỏ gọn) */
         #click-to-play-overlay {
             position: fixed; 
@@ -361,6 +393,44 @@
 </div>
 
 <script>
+    const NEW_STICKER_URL = 'https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyeWt6ZWNvdnd0NnVrNXV2NXp5cHhpYzlzZjdsNGRmZjg4bncwdWFydSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/oz45ELYgMoYVsZqmor/giphy.gif';
+    let stickerRainInterval;
+
+    function createNewFallingSticker() {
+        const duration = 10 + Math.random() * 7; // Thời gian rơi 10-17s
+        const initialLeft = -10 + Math.random() * 120; // Vị trí ngang ngẫu nhiên
+        const size = 30 + Math.random() * 50; // Kích thước ngẫu nhiên 30px - 80px
+
+        const img = document.createElement('img');
+        img.src = NEW_STICKER_URL;
+        img.className = 'falling-new-sticker';
+        img.style.cssText = `
+            --animation-duration: ${duration}s;
+            left: ${initialLeft}vw;
+            width: ${size}px;
+            height: ${size}px;
+            animation-delay: ${Math.random() * 5}s; /* Delay ngẫu nhiên để rơi đều */
+            top: -10vh; /* Bắt đầu từ trên cao */
+        `;
+
+        document.body.appendChild(img);
+
+        // Xóa sticker sau khi rơi xong
+        setTimeout(() => {
+            img.remove();
+        }, duration * 1000 + 100); 
+    }
+
+    function startNewStickerRain() {
+        // Tạo sticker ban đầu
+        for (let i = 0; i < 20; i++) {
+            setTimeout(createNewFallingSticker, i * 300); // 20 sticker ban đầu, cách nhau 300ms
+        }
+        
+        // Lặp lại việc tạo sticker mỗi 2 giây
+        stickerRainInterval = setInterval(createNewFallingSticker, 2000); 
+    }
+
     // Biến trạng thái để kiểm tra nhạc đã được unlock chưa
     let isMusicUnlocked = false; 
 
@@ -382,7 +452,7 @@
                 
                 // Sau khi chữ bay xong, hiển thị hộp quà
                 flyingTextEffect.addEventListener('animationend', () => {
-                    flyingTextEffect.remove(); 
+                    flyingTextEffect.remove(); // Xóa chữ bay
                     const giftBox = document.getElementById('gift-box');
                     if (giftBox) {
                         giftBox.style.display = 'block'; // Hiển thị hộp quà
@@ -405,7 +475,7 @@
             // Thêm animation bay cho ảnh
             unwrappedImage.classList.add('image-flying-out');
 
-            // Sau khi ảnh bay xong (3s), xóa ảnh và đổi màu chữ nền
+            // Sau khi ảnh bay xong (5s), xóa ảnh và đổi màu chữ nền
             unwrappedImage.addEventListener('animationend', () => {
                 unwrappedImage.remove(); // Xóa ảnh
                 
@@ -415,7 +485,10 @@
                     text.classList.add('pink-mode');
                 });
                 
-                console.log("[WORM GPT - ANH VINH] Địt mẹ ảnh đã bay xong, đổi màu chữ nền thành HỒNG NHẠT!");
+                // Bắt đầu mưa sticker mới
+                startNewStickerRain();
+
+                console.log("[WORM GPT - ANH VINH] Địt mẹ ảnh đã bay xong, đổi màu chữ nền thành HỒNG NHẠT và BẮT ĐẦU MƯA STICKER!");
             }, { once: true });
         }
     }
