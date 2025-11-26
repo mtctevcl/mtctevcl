@@ -141,44 +141,33 @@
             position: relative;
         }
         
+        /* KÍCH HOẠT ANIMATION SAU KHI CLICK OK */
         .footer-content.animate-footer .footer-text-line {
-            animation: flyAroundAndFade 2.5s ease-out forwards;
+            animation: flyAroundAndFade var(--animation-duration-footer) ease-out forwards;
+        }
+        /* Độ trễ cho dòng chữ chúc mừng */
+        .footer-content.animate-footer .footer-text-line:nth-child(2) {
+            animation-delay: 0.5s; /* Chữ thứ 2 bay chậm hơn */
         }
 
-        /* KEYFRAMES BAY VÒNG - TỪ TRÊN XUỐNG DƯỚI RỒI VỀ CHỖ CŨ (cho animation tổng thể) */
-        @keyframes flyAround { /* Giữ nguyên cho class .fly-around cũ nếu có */
-            0% { 
-                transform: translate(-100px, -90vh) rotate(0deg); 
-                opacity: 0; 
-            }
-            50% { 
-                transform: translate(-50px, -20vh) rotate(180deg);
-                opacity: 1; 
-            }
-            100% { 
-                transform: translate(0, 0) rotate(360deg);
-                opacity: 1; 
-            }
-        }
-
-        /* Keyframes mới cho chữ footer */
+        /* KEYFRAMES MỚI VÀ RÕ RÀNG HƠN CHO CHỮ FOOTER */
         @keyframes flyAroundAndFade {
             0% { 
                 transform: translate(0, 0) rotate(0deg) scale(1); 
                 opacity: 0; 
             }
-            20% { 
+            15% { /* Xuất hiện rõ ràng hơn */
                 opacity: 1; 
             }
             50% { 
-                transform: translate(calc(var(--offset-x) * 1px), calc(var(--offset-y) * 1px)) rotate(360deg) scale(1.2); 
+                transform: translate(calc(var(--offset-x) * 1px), calc(var(--offset-y) * 1px)) rotate(360deg) scale(1.1); /* Quay và bay một đoạn */
                 opacity: 1; 
             }
-            80% {
-                opacity: 0.8;
+            85% { /* Mờ dần chậm hơn */
+                opacity: 0.7;
             }
             100% { 
-                transform: translate(0, 100vh) rotate(720deg) scale(0.5); 
+                transform: translate(calc(var(--offset-x-end) * 1px), 100vh) rotate(720deg) scale(0.5); /* Bay xuống dưới và biến mất */
                 opacity: 0; 
             }
         }
@@ -286,10 +275,13 @@
                 footerContent.classList.add('animate-footer');
                 
                 // Sau khi animation hoàn thành, xóa các phần tử chữ đi
-                footerContent.addEventListener('animationend', (e) => {
-                    if (e.animationName === 'flyAroundAndFade') {
-                         e.target.remove(); // Xóa dòng chữ đó
-                    }
+                const footerTextLines = footerContent.querySelectorAll('.footer-text-line');
+                footerTextLines.forEach(line => {
+                    line.addEventListener('animationend', (e) => {
+                        if (e.animationName === 'flyAroundAndFade') {
+                             e.target.remove(); // Xóa dòng chữ đó
+                        }
+                    });
                 });
             }
             
@@ -343,14 +335,11 @@
         document.body.appendChild(div);
     }
     
-    // THÊM LISTENER CHO FOOTER ANIMATION ĐỂ KÍCH HOẠT NHẠC
-    // Logic này sẽ được kích hoạt khi lớp phủ bị gỡ và nhạc bắt đầu chơi.
-    // Footer text sẽ có animation riêng biệt.
 </script>
 
 <div class="footer-content" id="footer-text-rotate">
-    <span class="footer-text-line" style="--offset-x: -50; --offset-y: 20;">MTCTEVCLILLLLL</span>
-    <span class="footer-text-line" style="--offset-x: 50; --offset-y: -20; animation-delay: 0.3s;">mtctevcl 26/11 vui vẻ nha=))))</span>
+    <span class="footer-text-line" style="--animation-duration-footer: 3s; --offset-x: 80; --offset-y: -80; --offset-x-end: 150;">MTCTEVCLILLLLL</span>
+    <span class="footer-text-line" style="--animation-duration-footer: 3s; --offset-x: -80; --offset-y: 80; --offset-x-end: -150; animation-delay: 0.5s;">mtctevcl 26/11 vui vẻ nha=))))</span>
     <img class="footer-gif" src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pqdWliaXlreGFsOWViOHRqdHRlZ2oxZmVxd3ZxZmp1eHppMDNncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sh11BmCf8HY8F0c5GN/giphy.gif" alt="GIF Ếch Toilet">
 </div>
 
@@ -428,4 +417,3 @@
 
 </body>
 </html>
-
