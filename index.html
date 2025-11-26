@@ -231,68 +231,91 @@
             to { box-shadow: 0 0 15px #ffccff; }
         }
 
-        /* HỘP QUÀ CỦA ANH VINH - ĐẸP HƠN NHƯ THẬT! */
+        /* HỘP QUÀ CỦA ANH VINH - ĐẸP NHƯ ẢNH GỬI! */
         #gift-box {
             position: fixed;
-            width: 100px;
-            height: 80px; /* Chiều cao nhỏ hơn cho hộp quà */
-            background-color: #8B008B; /* Màu tím đậm */
-            border: 2px solid #6A006A;
-            border-radius: 5px;
+            width: 120px; /* Kích thước hộp quà lớn hơn một chút */
+            height: 100px;
+            background-color: #F8BBD0; /* Màu hồng nhạt cho thân hộp */
+            border: 1px solid #E91E63; /* Viền hồng đậm */
+            border-radius: 8px;
             display: none; 
             justify-content: center;
             align-items: center;
-            font-size: 2em;
-            color: white;
             cursor: pointer;
-            text-shadow: 0 0 8px #ff00ff;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Bóng đổ cho hộp quà */
+            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.4); /* Bóng đổ mạnh hơn */
             z-index: 98; 
             top: -150px; 
             left: 50%;
             transform: translateX(-50%);
             animation: giftFall 1.5s ease-out forwards; 
+            
+            /* Thêm gradient nhẹ để tạo chiều sâu */
+            background-image: linear-gradient(135deg, #F8BBD0 0%, #F48FB1 100%);
+            position: relative; /* Quan trọng để các pseudo-elements nằm đúng vị trí */
         }
         
         /* Nắp hộp quà */
         #gift-box::before {
             content: '';
             position: absolute;
-            top: -20px; /* Đặt nắp ở trên */
-            left: -2px;
-            width: 104px; /* Rộng hơn hộp một chút */
-            height: 25px;
-            background-color: #A020F0; /* Màu tím nhạt hơn cho nắp */
-            border: 2px solid #6A006A;
+            top: -15px; /* Đặt nắp ở trên */
+            left: -1px;
+            width: 122px; /* Rộng hơn hộp một chút */
+            height: 20px;
+            background-color: #E91E63; /* Màu hồng đậm hơn cho nắp */
+            border: 1px solid #C2185B;
             border-radius: 5px;
             z-index: 2; /* Đảm bảo nắp ở trên */
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            background-image: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
         }
 
         /* Ribbon dọc */
         #gift-box::after {
             content: '';
             position: absolute;
-            width: 20px; /* Độ rộng ribbon */
+            width: 25px; /* Độ rộng ribbon */
             height: 100%;
-            background-color: #FF1493; /* Màu hồng đậm cho ribbon */
+            background-color: #FCE4EC; /* Màu trắng-hồng nhạt cho ribbon */
             z-index: 3; /* Ribbon ở trên cùng */
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
         }
 
         /* Ribbon ngang */
         #gift-box .ribbon-h {
             position: absolute;
             width: 100%;
-            height: 20px; /* Độ rộng ribbon */
-            background-color: #FF1493; /* Màu hồng đậm cho ribbon */
+            height: 25px; /* Độ rộng ribbon */
+            background-color: #FCE4EC; /* Màu trắng-hồng nhạt cho ribbon */
             z-index: 3;
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Thêm nơ (bow) giả lập bằng CSS */
+        #gift-box .bow-left, #gift-box .bow-right {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #FCE4EC; /* Màu nơ */
+            border-radius: 50% 50% 0 50%; /* Hình dạng nơ */
+            transform: rotate(-45deg);
+            z-index: 4; /* Nơ ở trên cùng */
+            top: calc(50% - 15px); /* Canh giữa */
+            left: calc(50% - 25px); /* Vị trí nơ trái */
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+        }
+        #gift-box .bow-right {
+            transform: rotate(45deg);
+            left: calc(50% - 5px); /* Vị trí nơ phải */
         }
 
         /* Animation rơi thẳng */
         @keyframes giftFall {
             0% { top: -150px; opacity: 0; }
             50% { opacity: 1; }
-            100% { top: calc(50% - 40px); opacity: 1; } /* Rơi xuống giữa màn hình */
+            100% { top: calc(50% - 50px); opacity: 1; } /* Rơi xuống giữa màn hình */
         }
         
         /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ */
@@ -330,7 +353,10 @@
 </div>
 
 <div id="gift-box" onclick="openGift()">
-    <div class="ribbon-h"></div> 🎁 </div>
+    <div class="ribbon-h"></div> 
+    <div class="bow-left"></div>
+    <div class="bow-right"></div>
+</div>
 
 <img id="unwrapped-image" src="https://i.postimg.cc/prHY6Q2G/att-ho59jo-Re-GEMPg-WL58i-Gpc-BY7Bn5XNK2Hbt-F-k-WZeyg-M.jpg" alt="Ảnh Sau Khi Mở Hộp">
 
@@ -370,7 +396,7 @@
                     flyingTextEffect.remove(); // Xóa chữ bay
                     const giftBox = document.getElementById('gift-box');
                     if (giftBox) {
-                        giftBox.style.display = 'flex'; // Hiển thị hộp quà
+                        giftBox.style.display = 'block'; // Đổi sang 'block' hoặc 'flex' tùy theo cách hiển thị
                     }
                 }, { once: true });
             }
