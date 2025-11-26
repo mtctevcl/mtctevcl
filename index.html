@@ -126,13 +126,12 @@
             width: 20px; 
             height: 20px;
             margin-left: 5px;
-            /* Đảm bảo sticker cũng xoay theo chữ */
             animation: stickerRotate 7s linear infinite; 
             transform-origin: center;
         }
 
         .active-flying-effect {
-            animation: pinkTextFlyAndCircle 7s ease-out forwards; /* 7s cho quỹ đạo tròn chậm */
+            animation: pinkTextFlyAndCircle 7s ease-out forwards; 
         }
         
         /* Keyframe mới cho quỹ đạo hình tròn chạy từ trên xuống */
@@ -141,14 +140,14 @@
                 transform: translate(-50%, 0) rotate(0deg) scale(0.8); 
                 opacity: 0; 
             }
-            10% { 
+            5% { 
                 opacity: 1; 
             }
-            30% { /* Chạy vòng 1 */
+            30% { 
                 transform: translate(10vw, 30vh) rotate(360deg) scale(1.0); 
                 opacity: 1; 
             }
-            60% { /* Chạy vòng 2 */
+            60% { 
                 transform: translate(-10vw, 60vh) rotate(720deg) scale(1.0); 
                 opacity: 1; 
             }
@@ -232,6 +231,68 @@
             to { box-shadow: 0 0 15px #ffccff; }
         }
 
+        /* HỘP QUÀ MỚI CỦA ANH VINH! */
+        #gift-box {
+            position: fixed;
+            width: 100px; /* Kích thước hộp quà */
+            height: 100px;
+            background-color: #800080; /* Màu tím */
+            border: 4px solid #cc00ff; /* Viền tím đậm */
+            border-radius: 8px;
+            display: none; /* Ban đầu ẩn */
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: white;
+            cursor: pointer;
+            text-shadow: 0 0 10px #cc00ff;
+            z-index: 98; /* Dưới lớp phủ chính nhưng trên nền */
+            top: -150px; /* Bắt đầu từ trên cao */
+            left: 50%;
+            transform: translateX(-50%);
+            animation: giftFall 1.5s ease-out forwards; /* Animation rơi */
+        }
+        
+        #gift-box::before { /* Nơ hộp quà */
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 120px;
+            background-color: #ff00ff; /* Màu nơ hồng */
+            z-index: 1;
+        }
+
+        #gift-box::after { /* Nơ ngang */
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 30px;
+            background-color: #ff00ff; /* Màu nơ hồng */
+            z-index: 1;
+        }
+
+        /* Animation rơi thẳng */
+        @keyframes giftFall {
+            0% { top: -150px; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: calc(50% - 50px); opacity: 1; } /* Rơi xuống giữa màn hình */
+        }
+        
+        /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ */
+        #unwrapped-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 80vw; /* Tùy chỉnh kích thước ảnh */
+            max-height: 80vh;
+            border: 5px solid #ffccff; /* Viền hồng cho ảnh */
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
+            display: none; /* Ban đầu ẩn */
+            z-index: 100;
+            object-fit: contain; /* Đảm bảo ảnh hiển thị đầy đủ */
+        }
+
     </style>
 </head>
 <body>
@@ -251,6 +312,10 @@
     <img class="footer-gif" src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pqdWliaXlreGFsOWViOHRqdHRlZ2oxZmVxd3ZxZmp1eHppMDNncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sh11BmCf8HY8F0c5GN/giphy.gif" alt="GIF Ếch Toilet">
 </div>
 
+<div id="gift-box" onclick="openGift()">🎁</div>
+
+<img id="unwrapped-image" src="https://i.postimg.cc/prHY6Q2G/att-ho59jo-Re-GEMPg-WL58i-Gpc-BY7Bn5XNK2Hbt-F-k-WZeyg-M.jpg" alt="Ảnh Sau Khi Mở Hộp">
+
 
 <div style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden;">
     <iframe id="youtube-audio"
@@ -268,30 +333,41 @@
 
     function unlockMusic() {
         const overlay = document.getElementById('click-to-play-overlay');
-        const flyingEffect = document.getElementById('flying-text-effect');
+        const flyingTextEffect = document.getElementById('flying-text-effect');
         
         if (overlay) {
-            // Đã có tương tác, gỡ lớp phủ đi
             overlay.remove(); 
         }
 
-        // Kích hoạt nhạc chỉ một lần sau khi click
         if (player && !isMusicUnlocked) {
             player.playVideo();
             playNextRandomMusic(true);
             isMusicUnlocked = true;
             
-            // Kích hoạt animation lớp phủ chữ bay màu hồng
-            if (flyingEffect) { 
-                flyingEffect.classList.add('active-flying-effect');
+            if (flyingTextEffect) { 
+                flyingTextEffect.classList.add('active-flying-effect');
                 
-                // Xóa hiệu ứng sau khi animation kết thúc (để nó không chạy lại)
-                flyingEffect.addEventListener('animationend', () => {
-                    flyingEffect.remove();
+                // Sau khi chữ bay xong, hiển thị hộp quà
+                flyingTextEffect.addEventListener('animationend', () => {
+                    flyingTextEffect.remove(); // Xóa chữ bay
+                    const giftBox = document.getElementById('gift-box');
+                    if (giftBox) {
+                        giftBox.style.display = 'flex'; // Hiển thị hộp quà
+                    }
                 }, { once: true });
             }
             
             console.log("[WORM GPT - ANH VINH] Địt mẹ nhạc đã được mở khóa và hiệu ứng bay chữ hồng đã được kích hoạt!");
+        }
+    }
+
+    function openGift() {
+        const giftBox = document.getElementById('gift-box');
+        const unwrappedImage = document.getElementById('unwrapped-image');
+        
+        if (giftBox && unwrappedImage) {
+            giftBox.style.display = 'none'; // Ẩn hộp quà
+            unwrappedImage.style.display = 'block'; // Hiển thị ảnh
         }
     }
 
