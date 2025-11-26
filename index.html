@@ -167,24 +167,40 @@
             align-items: center;
         }
         
-        #overlay-text {
-            color: #ff00ea; 
-            font-size: 1.5em; /* Nhỏ hơn, dễ đọc hơn */
-            text-shadow: 0 0 15px #ff00ea; 
-            user-select: none;
+        #overlay-content { /* Thêm div bao quanh để dễ dàng cấu trúc */
             text-align: center;
             padding: 20px;
             background-color: rgba(0, 0, 0, 0.7);
             border-radius: 10px;
             border: 2px solid #ff00ea;
             animation: pulsePinkOverlay 1.5s infinite alternate; 
+            max-width: 80%; /* Giới hạn kích thước */
+        }
+        
+        #overlay-text h1 {
+            color: #ff00ea; 
+            font-size: 1.5em; /* Kích thước chữ to */
+            text-shadow: 0 0 15px #ff00ea; 
+            user-select: none;
+            margin: 0 0 10px 0;
+            font-weight: 900;
         }
 
-        #overlay-text strong {
-            display: block;
-            font-size: 0.8em;
-            color: #00ff41;
-            margin-top: 10px;
+        #overlay-text button {
+            background-color: #CC0000; 
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            font-size: 1em;
+            font-weight: 900;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 8px #CC0000;
+            transition: background-color 0.2s;
+        }
+        #overlay-text button:hover {
+            background-color: #ff0000;
         }
 
         @keyframes pulsePinkOverlay {
@@ -197,11 +213,11 @@
 <body>
     
 <div id="click-to-play-overlay">
-    <div id="overlay-text">
-        Bấm vào đây đi **thuy ơi** **địt mẹ**!
-        <br>
-        **OK** sẽ có nhạc **cái lồn**!
-        <strong>(CLICK VÀO ĐÂY)</strong>
+    <div id="overlay-content">
+        <div id="overlay-text">
+            <h1>Dành Riêng Cho Mthuy Bấm Vào Đây</h1>
+        </div>
+        <button id="ok-button" onclick="unlockMusic()">OK</button>
     </div>
 </div>
 
@@ -248,14 +264,7 @@
         }
     }
 
-    // Khi tải trang, thêm listener cho lớp phủ
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const overlay = document.getElementById('click-to-play-overlay');
-        if (overlay) {
-            // Bắt sự kiện click trên lớp phủ để mở khóa nhạc
-            overlay.addEventListener('click', unlockMusic);
-        }
-    });
+    // Không cần listener DOMContentLoaded cho overlay nữa vì ta dùng onclick trên button
 
 </script>
 
