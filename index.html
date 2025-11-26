@@ -38,16 +38,16 @@
             will-change: transform, opacity; 
         }
 
-        /* TRÁI TIM XANH LÁ HACKER (VẼ BẰNG CSS) */
+        /* TRÁI TIM LƠ LỬNG (ĐÃ ĐỔI SANG HỒNG NHẠT) */
         .hacker-heart-effect {
             position: absolute;
-            background-color: #00ff41; 
+            background-color: #FFCCFF; /* MÀU HỒNG NHẠT */
             pointer-events: none;
             opacity: 0;
             z-index: 1;
             will-change: transform, opacity;
             
-            box-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, 0 0 15px #00ff41; 
+            box-shadow: 0 0 5px #FFCCFF, 0 0 10px #FFCCFF, 0 0 15px #FFCCFF; 
             
             width: var(--heart-base-size); 
             height: var(--heart-base-size); 
@@ -63,7 +63,7 @@
             position: absolute;
             width: var(--heart-base-size);
             height: var(--heart-base-size);
-            background-color: #00ff41; 
+            background-color: #FFCCFF; /* MÀU HỒNG NHẠT */
             border-radius: 50%; 
             box-shadow: inherit; 
         }
@@ -102,12 +102,12 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* LỚP PHỦ CHỮ BAY MÀU HỒNG (MỚI) */
+        /* LỚP PHỦ CHỮ BAY MÀU HỒNG (QUỸ ĐẠO HÌNH TRÒN CHẠY) */
         #flying-text-effect {
             position: fixed;
-            top: 0; /* Bắt đầu từ trên cùng */
+            top: 0; 
             left: 50%;
-            font-size: 1.0em; /* Nhỏ hơn */
+            font-size: 1.0em; 
             font-weight: bold;
             color: #FF00EA; 
             text-shadow: 0 0 10px #FF00EA, 0 0 5px #ffccff;
@@ -116,32 +116,56 @@
             pointer-events: none;
             will-change: transform, opacity;
             white-space: nowrap;
-            /* Giữ nguyên tâm xoay ở giữa */
             transform: translate(-50%, 0); 
-            display: flex; /* Dùng flex để canh sticker */
+            display: flex; 
             align-items: center;
         }
 
         /* Sticker nhỏ gọn */
         #flying-text-effect .footer-gif {
-            width: 20px; /* Nhỏ hơn */
+            width: 20px; 
             height: 20px;
             margin-left: 5px;
+            /* Đảm bảo sticker cũng xoay theo chữ */
+            animation: stickerRotate 7s linear infinite; 
+            transform-origin: center;
         }
 
         .active-flying-effect {
-            animation: pinkTextFlyAndFade 7s linear forwards; /* Chậm và đều hơn: 7s */
+            animation: pinkTextFlyAndCircle 7s ease-out forwards; /* 7s cho quỹ đạo tròn chậm */
         }
-
-        @keyframes pinkTextFlyAndFade {
-            0% { transform: translate(-50%, 0) rotate(0deg) scale(0.8); opacity: 0; }
-            5% { opacity: 1; }
-            50% { transform: translate(-50%, 50vh) rotate(360deg) scale(1.0); opacity: 1; } /* Quay tròn và bay đến giữa màn hình */
-            90% { opacity: 0.5; }
-            100% { transform: translate(-50%, 120vh) rotate(720deg) scale(0.5); opacity: 0; } /* Bay xuống dưới và biến mất */
+        
+        /* Keyframe mới cho quỹ đạo hình tròn chạy từ trên xuống */
+        @keyframes pinkTextFlyAndCircle {
+            0% { 
+                transform: translate(-50%, 0) rotate(0deg) scale(0.8); 
+                opacity: 0; 
+            }
+            10% { 
+                opacity: 1; 
+            }
+            30% { /* Chạy vòng 1 */
+                transform: translate(10vw, 30vh) rotate(360deg) scale(1.0); 
+                opacity: 1; 
+            }
+            60% { /* Chạy vòng 2 */
+                transform: translate(-10vw, 60vh) rotate(720deg) scale(1.0); 
+                opacity: 1; 
+            }
+            90% { 
+                opacity: 0.5; 
+            }
+            100% { 
+                transform: translate(-50%, 120vh) rotate(720deg) scale(0.5); 
+                opacity: 0; 
+            }
         }
-
-
+        
+        /* Keyframe cho sticker (đảm bảo nó xoay độc lập) */
+        @keyframes stickerRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         
         /* CSS cho lớp phủ chính (Đã giữ nguyên kích thước nhỏ gọn) */
         #click-to-play-overlay {
