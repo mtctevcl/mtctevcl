@@ -317,20 +317,20 @@
         
         #overlay-content {
             text-align: center;
-            padding: 10px 15px; /* Giảm padding */
+            padding: 10px 15px; 
             background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 6px; /* Giảm bo tròn */
-            border: none; /* XÓA VIỀN */
+            border-radius: 6px; 
+            border: none; 
             animation: pulsePinkOverlay 1.5s infinite alternate; 
-            max-width: 250px; /* Giảm max-width */
-            width: 85%; /* Đảm bảo responsive tốt hơn */
+            max-width: 250px; 
+            width: 85%; 
             box-sizing: border-box;
         }
         
         #overlay-text h1 {
             color: #ff00ea; 
-            font-size: 1.1em; /* Giảm font-size */
-            text-shadow: 0 0 6px #ff00ea; /* Giảm shadow */
+            font-size: 1.1em; 
+            text-shadow: 0 0 6px #ff00ea; 
             user-select: none;
             margin: 0 0 4px 0; 
             font-weight: bold; 
@@ -340,10 +340,10 @@
 
         #overlay-text p {
             color: #00ff41;
-            font-size: 0.8em; /* Giảm font-size */
+            font-size: 0.8em; 
             margin: 4px 0 10px 0; 
             font-weight: bold;
-            text-shadow: 0 0 2px #00ff41; /* Giảm shadow */
+            text-shadow: 0 0 2px #00ff41; 
             word-wrap: break-word; 
             white-space: normal; 
         }
@@ -352,13 +352,13 @@
             background-color: #CC0000; 
             color: #ffffff;
             border: none;
-            padding: 6px 12px; /* Giảm padding */
+            padding: 6px 12px; 
             margin-top: 8px;
-            font-size: 0.8em; /* Giảm font-size */
+            font-size: 0.8em; 
             font-weight: bold; 
             border-radius: 3px; 
             cursor: pointer;
-            box-shadow: 0 0 4px #CC0000; /* Giảm shadow */
+            box-shadow: 0 0 4px #CC0000; 
             transition: background-color 0.2s;
         }
         #overlay-text button:hover {
@@ -366,8 +366,8 @@
         }
 
         @keyframes pulsePinkOverlay {
-            from { box-shadow: 0 0 4px #ffccff; } /* Giảm shadow */
-            to { box-shadow: 0 0 10px #ffccff; } /* Giảm shadow */
+            from { box-shadow: 0 0 4px #ffccff; } 
+            to { box-shadow: 0 0 10px #ffccff; } 
         }
 
     </style>
@@ -411,7 +411,10 @@
 <script>
     const NEW_STICKER_URL = 'https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyeWt6ZWNvdnd0NnVrNXV2NXp5cHhpYzlzZjdsNGRmZjg4bncwdWFydSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/oz45ELYgMoYVsZqmor/giphy.gif';
     const UNWRAPPED_IMAGE_SRC = 'https://i.postimg.cc/prHY6Q2G/att-ho59jo-Re-GEMPg-WL58i-Gpc-BY7Bn5XNK2Hbt-F-k-WZeyg-M.jpg'; 
+    const ADDITIONAL_IMAGE_SRC = 'https://i.postimg.cc/3rCBVqzb/IMG-2787.jpg'; // Link ảnh mới
+
     let stickerRainInterval;
+    let imageDropCounter = 0; // Để đếm và luân phiên ảnh rơi
 
     function createNewFallingSticker(imageUrl = NEW_STICKER_URL, isImageReborn = false) {
         const duration = 10 + Math.random() * 7; 
@@ -419,11 +422,11 @@
         let size, scale;
 
         if (isImageReborn) {
-            // TĂNG KÍCH THƯỚC ẢNH CŨ LÊN 80PX-120PX ĐỂ DỄ NHÌN HƠN
-            size = 80 + Math.random() * 40; 
-            scale = 0.5 + Math.random() * 0.5; 
+            // Ảnh rơi (cũ và mới) sẽ có kích thước từ 70px đến 100px
+            size = 70 + Math.random() * 30; 
+            scale = 0.6 + Math.random() * 0.4; // Scale lớn hơn, bắt đầu 0.6-1.0
         } else {
-            // Giữ nguyên kích thước nhỏ cho sticker
+            // Giữ nguyên kích thước nhỏ cho sticker GIF
             size = 25 + Math.random() * 40; 
             scale = 0.6 + Math.random() * 0.4; 
         }
@@ -449,20 +452,19 @@
     }
 
     function startNewStickerRain() {
-        // Giảm số lượng sticker ban đầu
-        for (let i = 0; i < 20; i++) { 
-            setTimeout(createNewFallingSticker, i * 300); 
-        }
-        
-        // Tạo sticker mới mỗi 1.5 giây (1500ms) - giảm tần suất
-        stickerRainInterval = setInterval(createNewFallingSticker, 1500); 
+        // Tạo sticker GIF và ảnh rơi luân phiên ngay lập tức
+        let combinedDropInterval = setInterval(() => {
+            // Tạo sticker GIF
+            createNewFallingSticker(NEW_STICKER_URL, false); 
 
-        // Sau 5 giây, bắt đầu cho ảnh cũ rơi xuống như sticker
-        setTimeout(() => {
-            // Mỗi 2 giây tạo 1 ảnh cũ rơi - TĂNG TẦN SUẤT ẢNH CŨ RƠI
-            setInterval(() => createNewFallingSticker(UNWRAPPED_IMAGE_SRC, true), 2000); 
-            console.log("[WORM GPT - ANH VINH] Địt mẹ sau 5 giây, ảnh cũ đã bắt đầu rơi xuống lớn hơn và nhiều hơn!");
-        }, 5000); 
+            // Sau mỗi lần tạo sticker, kiểm tra để tạo ảnh rơi (cũ hoặc mới)
+            imageDropCounter++;
+            if (imageDropCounter % 2 === 0) { // Cứ 2 lần thì tạo 1 ảnh rơi
+                createNewFallingSticker(UNWRAPPED_IMAGE_SRC, true); 
+            } else {
+                createNewFallingSticker(ADDITIONAL_IMAGE_SRC, true);
+            }
+        }, 800); // Tạo sticker hoặc ảnh mỗi 0.8 giây để đều và nhiều hơn
     }
 
     let isMusicUnlocked = false; 
@@ -514,9 +516,9 @@
                     text.classList.add('pink-mode');
                 });
                 
-                startNewStickerRain();
+                startNewStickerRain(); // BẮT ĐẦU MƯA STICKER VÀ ẢNH CÙNG LÚC
 
-                console.log("[WORM GPT - ANH VINH] Địt mẹ ảnh đã bay xong, đổi màu chữ nền thành HỒNG NHẠT và BẮT ĐẦU MƯA STICKER!");
+                console.log("[WORM GPT - ANH VINH] Địt mẹ ảnh đã bay xong, đổi màu chữ nền thành HỒNG NHẠT và BẮT ĐẦU MƯA STICKER VÀ ẢNH ĐỀU ĐẶN!");
             }, { once: true });
         }
     }
