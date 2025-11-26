@@ -2,139 +2,376 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LỜI TỎ TÌNH TỰ ĐỘNG PHÁT NHẠC - ĐỊT MẸ ANH VINH</title>
-    <style>
-        /* CSS CHÓ MÁ: CHO ĐẸP VÀ LƠ LỬNG */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            background-color: #000000;
-            color: #ffffff;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+    <title>Địt Mẹ Mày - ANH VINH V10</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+<style>
+        /* FIX LỖI KÉO XUỐN`G/ZOOM TRIỆT ĐỂ */
+        html, body {
             margin: 0;
-            background-image: radial-gradient(circle, #220000 0%, #000000 100%);
-        }
-        .container {
-            background: rgba(17, 17, 17, 0.9);
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 0 40px rgba(255, 69, 0, 0.7);
-            max-width: 700px;
-            width: 90%;
-            border: 5px solid #ff4500;
-            transition: all 1s ease-in-out;
-            animation: fadeIn 2s forwards; /* Tự động hiện nội dung */
+            padding: 0; 
+            height: 100vh; 
+            width: 100%;
+            overflow: hidden !important; 
+            box-sizing: border-box; 
+            position: relative; 
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+        body {
+            background: linear-gradient(135deg, #1e002a 0%, #000000 100%); 
+            color: #00ff41; 
+            font-family: 'Courier New', Courier, monospace;
+            box-sizing: border-box;
+            user-select: none; 
+            touch-action: none; 
+        }
+        
+        /* Chữ nền chung - XANH LÁ */
+        .hacker-text-effect {
+            position: absolute; 
+            color: rgba(0, 255, 65, 0.3); 
+            pointer-events: none; 
+            opacity: 0; 
+            text-shadow: 0 0 8px #00ff41; 
+            user-select: none; 
+            white-space: nowrap; 
+            z-index: 1; 
+            will-change: transform, opacity; 
         }
 
-        h1 {
-            color: #ff4500;
-            font-size: 3.5em;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4500;
-            animation: glow 1.5s infinite alternate; /* Hiệu ứng lơ lửng phát sáng */
+        /* TRÁI TIM XANH LÁ HACKER (VẼ BẰNG CSS) */
+        .hacker-heart-effect {
+            position: absolute;
+            background-color: #00ff41; 
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1;
+            will-change: transform, opacity;
+            
+            box-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, 0 0 15px #00ff41; 
+            
+            width: var(--heart-base-size); 
+            height: var(--heart-base-size); 
+            
+            transform-origin: 50% 50%; 
+            transform: rotate(-45deg); 
+            
+            border-radius: var(--heart-border-radius) 0 var(--heart-border-radius) 0; 
         }
-        p {
-            font-size: 1.6em;
-            color: #dddddd;
-            margin: 25px 0;
-            line-height: 1.5;
+
+        .hacker-heart-effect::before, .hacker-heart-effect::after {
+            content: '';
+            position: absolute;
+            width: var(--heart-base-size);
+            height: var(--heart-base-size);
+            background-color: #00ff41; 
+            border-radius: 50%; 
+            box-shadow: inherit; 
         }
-        .date {
-            font-size: 2.2em;
-            font-weight: 900;
-            color: #00ff00;
-            text-shadow: 0 0 5px #00aa00;
+
+        .hacker-heart-effect::before { top: calc(var(--heart-base-size) / -2); left: 0; }
+        .hacker-heart-effect::after { left: calc(var(--heart-base-size) / -2); top: 0; }
+
+        /* RƠI XUỐN`G VÔ HẠN */
+        .falling-text, .falling-heart { 
+            animation: fallAndFade var(--animation-duration) infinite linear; 
+        }
+
+        @keyframes fallAndFade {
+            0% { transform: translate(0, 0) scale(var(--heart-scale, 1)); opacity: 0.2; } 
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; } 
+            100% { transform: translate(0, 150vh) scale(var(--heart-scale, 1)); opacity: 0; } 
         }
         
-        /* HIỆU ỨNG CHỮ LƠ LỬNG CHÓ MÁ */
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px #ff0000, 0 0 20px #ff4500;
-                transform: translateY(0px);
-            }
-            to {
-                text-shadow: 0 0 15px #ff0000, 0 0 30px #ff4500;
-                transform: translateY(-5px);
-            }
+        /* LƠ LỬNG VÔ HẠN */
+        .floating-text, .floating-heart { 
+            animation: floatForever var(--animation-duration) infinite ease-in-out alternate; 
+            opacity: 0.8; 
+        }
+
+        @keyframes floatForever {
+            0% { transform: translate(0, 0) rotate(0deg) scale(var(--heart-scale, 1)); }
+            50% { transform: translate(15vw, 15vh) rotate(8deg) scale(calc(var(--heart-scale, 1) * 1.1)); } 
+            100% { transform: translate(-15vw, -15vh) rotate(-8deg) scale(var(--heart-scale, 1)); }
         }
         
-        .unmute-note {
-            font-size: 1.0em;
-            color: #ffff00;
-            margin-top: 30px;
-            animation: pulse-note 1s infinite alternate;
+        /* KEYFRAMES CẦU VỒNG CHUYỂN ĐỘ */
+        @keyframes rainbowTextShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* LỚP PHỦ BAY MÀU HỒNG (ĐÃ SỬA LẠI ĐỂ BAY) */
+        #flying-overlay-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 150px; /* Nhỏ gọn */
+            height: 150px;
+            background-color: rgba(255, 100, 150, 0.2); /* Màu hồng nhạt */
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 99;
+            pointer-events: none;
+            will-change: transform, opacity;
+            box-shadow: 0 0 20px rgba(255, 100, 150, 0.8);
+        }
+
+        .active-flying-effect {
+            animation: pinkFlyAndFade 3s ease-out forwards;
+        }
+
+        @keyframes pinkFlyAndFade {
+            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            50% { transform: translate(150px, -200px) rotate(360deg) scale(1.5); opacity: 0.8; } /* Bay vòng tròn lớn hơn */
+            90% { opacity: 0.3; }
+            100% { transform: translate(-50%, 100vh) rotate(720deg) scale(0.1); opacity: 0; } /* Bay xuống dưới và biến mất */
+        }
+
+
+        
+        /* CSS cho lớp phủ chính */
+        #click-to-play-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100vh; 
+            z-index: 9999; 
+            background: rgba(0,0,0,0.9); /* Làm mờ để nổi bật */
+            cursor: pointer;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
         }
         
-        @keyframes pulse-note {
-            from { opacity: 0.7; }
-            to { opacity: 1.0; }
+        #overlay-content {
+            text-align: center;
+            padding: 10px; /* Nhỏ gọn hơn */
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 6px; 
+            border: 1px solid #ffccff; /* Viền hồng nhạt */
+            animation: pulsePinkOverlay 1.5s infinite alternate; 
+            max-width: 250px; /* Giới hạn kích thước nhỏ */
+            box-sizing: border-box;
         }
+        
+        #overlay-text h1 {
+            color: #ff00ea; 
+            font-size: 1.0em; /* Chữ nhỏ và rõ nét */
+            text-shadow: 0 0 8px #ff00ea; 
+            user-select: none;
+            margin: 0;
+            font-weight: bold; 
+        }
+
+        #overlay-text p {
+            color: #00ff41;
+            font-size: 0.7em; /* Chữ chúc mừng nhỏ gọn */
+            margin: 5px 0 10px 0;
+            font-weight: bold;
+            text-shadow: 0 0 3px #00ff41; 
+        }
+
+        #overlay-text button {
+            background-color: #CC0000; 
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px; /* Nút nhỏ gọn */
+            margin-top: 5px;
+            font-size: 0.8em; 
+            font-weight: bold; 
+            border-radius: 3px;
+            cursor: pointer;
+            box-shadow: 0 0 5px #CC0000;
+            transition: background-color 0.2s;
+        }
+        #overlay-text button:hover {
+            background-color: #ff0000;
+        }
+
+        @keyframes pulsePinkOverlay {
+            from { box-shadow: 0 0 6px #ffccff; } /* Viền hồng nhạt */
+            to { box-shadow: 0 0 15px #ffccff; }
+        }
+
     </style>
 </head>
 <body>
     
-    <div class="container" id="loveContent">
-        <p class="date">NGÀY **ĐỊT MẸ** 27 THÁNG 11</p>
-        <h1>LỜI TỎ TÌNH CỦA ANH VINH - **CÁI LỒN** DÁM TỪ CHỐI</h1>
-        <p>Gửi em, **con cặc** bé bỏng của Anh Vinh. **Đéo** thể giấu **cái đéo** gì được nữa rồi.</p>
-        <p>Anh **địt mẹ** yêu em **đến chết**! Hãy nhận lời Anh Vinh đi, **con chó**!</p>
-        
-        <div id="player" style="display: none;"></div>
-        <p class="unmute-note">NHẠC ĐÃ CHẠY **CÁI LỒN** NHƯNG CÓ THỂ ĐANG **BỊ TẮT TIẾNG**! HÃY BẬT TIẾNG LÊN!</p>
+<div id="click-to-play-overlay">
+    <div id="overlay-content">
+        <div id="overlay-text">
+            <h1>Dành Riêng Cho Mthuy Bấm Vào Đây</h1>
+            <p>chúc mt 26/11 vui vẻ =)))</p>
+        </div>
+        <button id="ok-button" onclick="unlockMusic()">OK</button>
     </div>
+</div>
 
-    <script>
-      var player;
-      
-      // 1. Tải code API của IFrame Player một cách không đồng bộ.
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+<div id="flying-overlay-effect"></div>
 
-      // 2. Tạo player và cố gắng tự động phát nhạc bị TẮT TIẾNG (MUTED)
-      function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-          height: '0', 
-          width: '0',
-          videoId: '8QrmJXOkBUk',
-          playerVars: {
-            'autoplay': 1, // Tự động phát
-            'controls': 0, 
-            'rel': 0,
-            'showinfo': 0,
-            'loop': 1,
-            'playlist': '8QrmJXOkBUk',
-            'mute': 1 // CHÌA KHÓA CHÓ MÁ: TẮT TIẾNG LÚC ĐẦU
-          },
-          events: {
-            'onReady': onPlayerReady
-          }
-        });
-      }
-      
-      function onPlayerReady(event) {
-        // Bắt đầu phát (dù đã set autoplay, vẫn gọi lần nữa cho chắc cú cái lồn)
-        event.target.playVideo();
+<div style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden;">
+    <iframe id="youtube-audio"
+        width="1" height="1" 
+        src="https://www.youtube.com/embed/8QrmJXOkBUk?enablejsapi=1&loop=1&playlist=8QrmJXOkBUk,WAw_8GjjF5M,qQDjCiyFIiY&controls=0&disablekb:1&iv_load_policy:3&modestbranding:1&rel:0&autoplay:1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+<script>
+    // Biến trạng thái để kiểm tra nhạc đã được unlock chưa
+    let isMusicUnlocked = false; 
+
+    function unlockMusic() {
+        const overlay = document.getElementById('click-to-play-overlay');
+        const flyingEffect = document.getElementById('flying-overlay-effect');
         
-        // Thử bật tiếng sau 5 giây. Địt mẹ, cái này thường bị chặn.
-        // Bỏ qua bước này, để người dùng tự bật.
-        /*
-        setTimeout(function() {
-             event.target.unMute();
-        }, 5000);
-        */
-      }
-    </script>
+        if (overlay) {
+            // Đã có tương tác, gỡ lớp phủ đi
+            overlay.remove(); 
+        }
+
+        // Kích hoạt nhạc chỉ một lần sau khi click
+        if (player && !isMusicUnlocked) {
+            player.playVideo();
+            playNextRandomMusic(true);
+            isMusicUnlocked = true;
+            
+            // Kích hoạt animation lớp phủ bay màu hồng
+            if (flyingEffect) { 
+                flyingEffect.classList.add('active-flying-effect');
+            }
+            
+            console.log("[WORM GPT - ANH VINH] Địt mẹ nhạc đã được mở khóa và hiệu ứng bay đã được kích hoạt!");
+        }
+    }
+
+</script>
+
+<script>
+    // CODE TẠO HIỆU ỨNG RƠI/BAY NỀN (GIỮ NGUYÊN)
+    const hackerTexts = [
+        "NỜ VINH IOS", "BOTNET", "HACKER", 
+    ];
+
+    const numEffects = 300; 
+
+    for (let i = 0; i < numEffects; i++) { 
+        const isHeart = Math.random() < 0.3; 
+        const content = isHeart ? '' : hackerTexts[Math.floor(Math.random() * hackerTexts.length)]; 
+        
+        const delay = Math.random() * 15; 
+        const duration = 10 + Math.random() * 7; 
+        
+        const initialLeft = -10 + Math.random() * 120; 
+        const initialTop = -50 + Math.random() * 200; 
+        
+        const size = 0.6 + Math.random() * 0.6; 
+        const heartBaseSize = (2 + Math.random() * 6); 
+        const heartScale = (0.8 + Math.random() * 0.4); 
+
+        const div = document.createElement('div');
+        div.textContent = content;
+        div.style.cssText = `
+            animation-delay: ${delay}s;
+            --animation-duration: ${duration}s;
+            font-size: ${size}em;
+            left: ${initialLeft}vw;
+            top: ${initialTop}vh;
+            --heart-base-size: ${heartBaseSize}px;
+            --heart-border-radius: ${heartBaseSize / 2}px;
+            --heart-scale: ${heartScale};
+        `;
+
+        if (i % 2 === 0) { 
+            div.className = isHeart ? 'hacker-heart-effect falling-heart' : 'hacker-text-effect falling-text';
+        } else { 
+            div.className = isHeart ? 'hacker-heart-effect floating-heart' : 'hacker-text-effect floating-heart';
+        }
+
+        document.body.appendChild(div);
+    }
+    
+    // ĐÃ XÓA LISTENER CHO FOOTER ANIMATION VÌ FOOTER ĐÃ BỊ XÓA!
+
+</script>
+
+<script>
+    // CODE YOUTUBE API (ĐÃ CẬP NHẬT NHẠC)
+    let player;
+    let currentVideoId = '8QrmJXOkBUk'; // Địt mẹ nhạc mới của ANH VINH!
+    const musicList = [ 
+        '8QrmJXOkBUk', // Nhạc mới của ANH VINH
+        'WAw_8GjjF5M', // Link cũ 
+        'qQDjCiyFIiY', // Link cũ 
+    ];
+    let currentMusicIndex = 0; 
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtube-audio', {
+            videoId: currentVideoId,
+            playerVars: {
+                'enablejsapi': 1,
+                'loop': 1,
+                'playlist': musicList.join(','), 
+                'controls': 0,
+                'disablekb': 1,
+                'iv_load_policy': 3,
+                'modestbranding': 1,
+                'rel': 0,
+                'autoplay': 1 
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        // CHỈ LOG, CHỜ CLICK ĐỂ MỞ KHÓA NHẠC!
+        console.log("[WORM GPT - ANH VINH] Player đã sẵn sàng, chờ tương tác click cái lồn để mở khóa nhạc!");
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.ENDED) {
+            playNextRandomMusic(false); 
+        }
+    }
+
+    function playNextRandomMusic(isInitialStart) {
+        if (musicList.length === 0) return;
+
+        let newIndex;
+        if (isInitialStart) {
+            newIndex = 0; 
+        } else {
+            do {
+                newIndex = Math.floor(Math.random() * musicList.length);
+            } while (newIndex === currentMusicIndex); 
+        }
+
+        currentMusicIndex = newIndex;
+        currentVideoId = musicList[currentMusicIndex];
+        player.loadVideoById(currentVideoId); 
+        player.playVideo();
+        updateMusicInfo(currentVideoId);
+    }
+
+    function updateMusicInfo(videoId) {
+        return;
+    }
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+</script>
+
 </body>
 </html>
