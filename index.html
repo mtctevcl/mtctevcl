@@ -298,7 +298,7 @@
             100% { top: calc(50% - 50px); opacity: 1; } 
         }
         
-        /* CSS cho lớp phủ chính (Đã fix lỗi hiển thị) */
+        /* CSS cho lớp phủ chính (Đã fix lỗi hiển thị, nhỏ hơn, không viền) */
         #click-to-play-overlay {
             position: fixed; 
             top: 0; 
@@ -317,22 +317,22 @@
         
         #overlay-content {
             text-align: center;
-            padding: 15px 20px; 
+            padding: 10px 15px; /* Giảm padding */
             background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 8px; 
-            border: 2px solid #ffccff; 
+            border-radius: 6px; /* Giảm bo tròn */
+            border: none; /* XÓA VIỀN */
             animation: pulsePinkOverlay 1.5s infinite alternate; 
-            max-width: 300px; 
-            width: 90%; 
+            max-width: 250px; /* Giảm max-width */
+            width: 85%; /* Đảm bảo responsive tốt hơn */
             box-sizing: border-box;
         }
         
         #overlay-text h1 {
             color: #ff00ea; 
-            font-size: 1.2em; 
-            text-shadow: 0 0 8px #ff00ea; 
+            font-size: 1.1em; /* Giảm font-size */
+            text-shadow: 0 0 6px #ff00ea; /* Giảm shadow */
             user-select: none;
-            margin: 0 0 5px 0; 
+            margin: 0 0 4px 0; 
             font-weight: bold; 
             word-wrap: break-word; 
             white-space: normal; 
@@ -340,10 +340,10 @@
 
         #overlay-text p {
             color: #00ff41;
-            font-size: 0.9em; 
-            margin: 5px 0 15px 0; 
+            font-size: 0.8em; /* Giảm font-size */
+            margin: 4px 0 10px 0; 
             font-weight: bold;
-            text-shadow: 0 0 3px #00ff41; 
+            text-shadow: 0 0 2px #00ff41; /* Giảm shadow */
             word-wrap: break-word; 
             white-space: normal; 
         }
@@ -352,13 +352,13 @@
             background-color: #CC0000; 
             color: #ffffff;
             border: none;
-            padding: 8px 15px; 
-            margin-top: 10px;
-            font-size: 0.9em; 
+            padding: 6px 12px; /* Giảm padding */
+            margin-top: 8px;
+            font-size: 0.8em; /* Giảm font-size */
             font-weight: bold; 
-            border-radius: 4px; 
+            border-radius: 3px; 
             cursor: pointer;
-            box-shadow: 0 0 5px #CC0000;
+            box-shadow: 0 0 4px #CC0000; /* Giảm shadow */
             transition: background-color 0.2s;
         }
         #overlay-text button:hover {
@@ -366,8 +366,8 @@
         }
 
         @keyframes pulsePinkOverlay {
-            from { box-shadow: 0 0 6px #ffccff; } 
-            to { box-shadow: 0 0 15px #ffccff; }
+            from { box-shadow: 0 0 4px #ffccff; } /* Giảm shadow */
+            to { box-shadow: 0 0 10px #ffccff; } /* Giảm shadow */
         }
 
     </style>
@@ -421,7 +421,7 @@
         if (isImageReborn) {
             // TĂNG KÍCH THƯỚC ẢNH CŨ LÊN 80PX-120PX ĐỂ DỄ NHÌN HƠN
             size = 80 + Math.random() * 40; 
-            scale = 0.5 + Math.random() * 0.5; // Scale lớn hơn, bắt đầu 0.5-1.0
+            scale = 0.5 + Math.random() * 0.5; 
         } else {
             // Giữ nguyên kích thước nhỏ cho sticker
             size = 25 + Math.random() * 40; 
@@ -451,7 +451,7 @@
     function startNewStickerRain() {
         // Giảm số lượng sticker ban đầu
         for (let i = 0; i < 20; i++) { 
-            setTimeout(createNewFallingSticker, i * 300); // Cách nhau 300ms
+            setTimeout(createNewFallingSticker, i * 300); 
         }
         
         // Tạo sticker mới mỗi 1.5 giây (1500ms) - giảm tần suất
@@ -459,9 +459,9 @@
 
         // Sau 5 giây, bắt đầu cho ảnh cũ rơi xuống như sticker
         setTimeout(() => {
-            // Mỗi 3.5 giây tạo 1 ảnh cũ rơi - giảm tần suất để không quá lộn xộn
-            setInterval(() => createNewFallingSticker(UNWRAPPED_IMAGE_SRC, true), 3500); 
-            console.log("[WORM GPT - ANH VINH] Địt mẹ sau 5 giây, ảnh cũ đã bắt đầu rơi xuống lớn hơn!");
+            // Mỗi 2 giây tạo 1 ảnh cũ rơi - TĂNG TẦN SUẤT ẢNH CŨ RƠI
+            setInterval(() => createNewFallingSticker(UNWRAPPED_IMAGE_SRC, true), 2000); 
+            console.log("[WORM GPT - ANH VINH] Địt mẹ sau 5 giây, ảnh cũ đã bắt đầu rơi xuống lớn hơn và nhiều hơn!");
         }, 5000); 
     }
 
