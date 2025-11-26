@@ -105,29 +105,40 @@
         /* LỚP PHỦ CHỮ BAY MÀU HỒNG (MỚI) */
         #flying-text-effect {
             position: fixed;
-            top: 50%;
+            top: 0; /* Bắt đầu từ trên cùng */
             left: 50%;
-            font-size: 1.5em; 
+            font-size: 1.0em; /* Nhỏ hơn */
             font-weight: bold;
-            color: #FF00EA; /* Màu hồng đậm */
+            color: #FF00EA; 
             text-shadow: 0 0 10px #FF00EA, 0 0 5px #ffccff;
             opacity: 0;
             z-index: 99;
             pointer-events: none;
             will-change: transform, opacity;
             white-space: nowrap;
+            /* Giữ nguyên tâm xoay ở giữa */
+            transform: translate(-50%, 0); 
+            display: flex; /* Dùng flex để canh sticker */
+            align-items: center;
+        }
+
+        /* Sticker nhỏ gọn */
+        #flying-text-effect .footer-gif {
+            width: 20px; /* Nhỏ hơn */
+            height: 20px;
+            margin-left: 5px;
         }
 
         .active-flying-effect {
-            animation: pinkTextFlyAndFade 5s ease-out forwards; /* Chậm hơn: 5s */
+            animation: pinkTextFlyAndFade 7s linear forwards; /* Chậm và đều hơn: 7s */
         }
 
         @keyframes pinkTextFlyAndFade {
-            0% { transform: translate(-50%, -50%) rotate(0deg) scale(0.5); opacity: 0; }
+            0% { transform: translate(-50%, 0) rotate(0deg) scale(0.8); opacity: 0; }
             5% { opacity: 1; }
-            50% { transform: translate(200px, -200px) rotate(360deg) scale(1.2); opacity: 1; } /* Quay và bay một đoạn */
-            80% { opacity: 0.8; }
-            100% { transform: translate(-50%, 150vh) rotate(720deg) scale(0.3); opacity: 0; } /* Bay xuống dưới và biến mất */
+            50% { transform: translate(-50%, 50vh) rotate(360deg) scale(1.0); opacity: 1; } /* Quay tròn và bay đến giữa màn hình */
+            90% { opacity: 0.5; }
+            100% { transform: translate(-50%, 120vh) rotate(720deg) scale(0.5); opacity: 0; } /* Bay xuống dưới và biến mất */
         }
 
 
