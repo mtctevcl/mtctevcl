@@ -102,7 +102,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* CHỮ DƯỚI ĐÍT NỀN - 7 MÀU LƯỚT, BỎ NHẤP NHÁY (GIỮ NGUYÊN) */
+        /* Footer content (đã cập nhật) */
         .footer-content { 
             position: fixed; 
             bottom: 10px; 
@@ -119,6 +119,7 @@
             z-index: 10;
             pointer-events: none; 
             display: flex; 
+            flex-direction: column; /* Cho phép các dòng chữ xếp chồng */
             align-items: center; 
             transform: translate(0, 0) rotate(0deg); 
             animation-fill-mode: forwards;
@@ -131,13 +132,21 @@
             margin-left: 5px; 
         }
         
-        /* CLASS DÙNG ĐỂ KÍCH HOẠT ANIMATION BAY VÒNG */
-        .footer-content.fly-around {
-            animation: flyAround 1s ease-in-out forwards, rainbowTextShift 3s linear infinite; 
+        /* Animation mới cho footer text */
+        .footer-text-line {
+            display: block; /* Đảm bảo mỗi dòng là một khối riêng */
+            white-space: nowrap;
+            opacity: 0; /* Bắt đầu ẩn */
+            transform-origin: center center; /* Tâm quay */
+            position: relative;
+        }
+        
+        .footer-content.animate-footer .footer-text-line {
+            animation: flyAroundAndFade 2.5s ease-out forwards;
         }
 
-        /* KEYFRAMES BAY VÒNG - TỪ TRÊN XUỐNG DƯỚI RỒI VỀ CHỖ CŨ */
-        @keyframes flyAround {
+        /* KEYFRAMES BAY VÒNG - TỪ TRÊN XUỐNG DƯỚI RỒI VỀ CHỖ CŨ (cho animation tổng thể) */
+        @keyframes flyAround { /* Giữ nguyên cho class .fly-around cũ nếu có */
             0% { 
                 transform: translate(-100px, -90vh) rotate(0deg); 
                 opacity: 0; 
@@ -149,6 +158,28 @@
             100% { 
                 transform: translate(0, 0) rotate(360deg);
                 opacity: 1; 
+            }
+        }
+
+        /* Keyframes mới cho chữ footer */
+        @keyframes flyAroundAndFade {
+            0% { 
+                transform: translate(0, 0) rotate(0deg) scale(1); 
+                opacity: 0; 
+            }
+            20% { 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translate(calc(var(--offset-x) * 1px), calc(var(--offset-y) * 1px)) rotate(360deg) scale(1.2); 
+                opacity: 1; 
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% { 
+                transform: translate(0, 100vh) rotate(720deg) scale(0.5); 
+                opacity: 0; 
             }
         }
         
@@ -169,34 +200,35 @@
         
         #overlay-content { /* Thêm div bao quanh để dễ dàng cấu trúc */
             text-align: center;
-            padding: 20px;
+            padding: 15px; /* Nhỏ hơn */
             background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            border: 2px solid #ff00ea;
+            border-radius: 8px; /* Bo tròn hơn */
+            border: 2px solid #ffccff; /* Viền hồng nhạt */
             animation: pulsePinkOverlay 1.5s infinite alternate; 
-            max-width: 80%; /* Giới hạn kích thước */
+            max-width: 90%; /* Giới hạn kích thước */
+            box-sizing: border-box;
         }
         
         #overlay-text h1 {
             color: #ff00ea; 
-            font-size: 1.5em; /* Kích thước chữ to */
-            text-shadow: 0 0 15px #ff00ea; 
+            font-size: 1.2em; /* Kích thước chữ nhỏ hơn */
+            text-shadow: 0 0 10px #ff00ea; 
             user-select: none;
             margin: 0 0 10px 0;
-            font-weight: 900;
+            font-weight: bold; /* Bold hơn */
         }
 
         #overlay-text button {
             background-color: #CC0000; 
             color: #ffffff;
             border: none;
-            padding: 10px 20px;
-            margin-top: 15px;
-            font-size: 1em;
-            font-weight: 900;
-            border-radius: 5px;
+            padding: 8px 15px; /* Nhỏ hơn */
+            margin-top: 10px;
+            font-size: 0.9em; /* Nhỏ hơn */
+            font-weight: bold; 
+            border-radius: 4px;
             cursor: pointer;
-            box-shadow: 0 0 8px #CC0000;
+            box-shadow: 0 0 6px #CC0000;
             transition: background-color 0.2s;
         }
         #overlay-text button:hover {
@@ -204,8 +236,8 @@
         }
 
         @keyframes pulsePinkOverlay {
-            from { box-shadow: 0 0 10px #ff00ea; }
-            to { box-shadow: 0 0 25px #ff00ea; }
+            from { box-shadow: 0 0 8px #ffccff; } /* Viền hồng nhạt */
+            to { box-shadow: 0 0 20px #ffccff; }
         }
 
     </style>
@@ -249,22 +281,21 @@
             isMusicUnlocked = true;
             
             // Kích hoạt animation footer
-            const footerContent = document.querySelector('.footer-content'); 
+            const footerContent = document.getElementById('footer-text-rotate'); 
             if (footerContent) { 
-                footerContent.classList.remove('fly-around');
-                void footerContent.offsetWidth; 
-                footerContent.classList.add('fly-around'); 
+                footerContent.classList.add('animate-footer');
                 
-                setTimeout(() => {
-                    footerContent.classList.remove('fly-around');
-                }, 1000); 
+                // Sau khi animation hoàn thành, xóa các phần tử chữ đi
+                footerContent.addEventListener('animationend', (e) => {
+                    if (e.animationName === 'flyAroundAndFade') {
+                         e.target.remove(); // Xóa dòng chữ đó
+                    }
+                });
             }
             
             console.log("[WORM GPT - ANH VINH] Địt mẹ nhạc đã được mở khóa bằng tương tác!");
         }
     }
-
-    // Không cần listener DOMContentLoaded cho overlay nữa vì ta dùng onclick trên button
 
 </script>
 
@@ -313,29 +344,15 @@
     }
     
     // THÊM LISTENER CHO FOOTER ANIMATION ĐỂ KÍCH HOẠT NHẠC
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const footerContent = document.getElementById('footer-text-rotate');
-
-        if (footerContent) {
-            footerContent.addEventListener('animationend', (e) => {
-                // Đảm bảo chỉ bắt sự kiện của flyAround
-                if (e.animationName === 'flyAround' && player) {
-                    console.log("[WORM GPT - ANH VINH] Địt mẹ animation xong rồi, kích hoạt nhạc cái lồn!");
-                    // Kích hoạt nhạc nếu nó bị dừng VÀ đã được mở khóa (isMusicUnlocked = true)
-                    if (isMusicUnlocked && player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                        player.playVideo();
-                    }
-                }
-            });
-        }
-    });
-
+    // Logic này sẽ được kích hoạt khi lớp phủ bị gỡ và nhạc bắt đầu chơi.
+    // Footer text sẽ có animation riêng biệt.
 </script>
 
 <div class="footer-content" id="footer-text-rotate">
-        PYTHON BOTNET LIÊN HỆ
-        <img class="footer-gif" src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pqdWliaXlreGFsOWViOHRqdHRlZ2oxZmVxd3ZxZmp1eHppMDNncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sh11BmCf8HY8F0c5GN/giphy.gif" alt="GIF Ếch Toilet">
-    </div>
+    <span class="footer-text-line" style="--offset-x: -50; --offset-y: 20;">MTCTEVCLILLLLL</span>
+    <span class="footer-text-line" style="--offset-x: 50; --offset-y: -20; animation-delay: 0.3s;">mtctevcl 26/11 vui vẻ nha=))))</span>
+    <img class="footer-gif" src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pqdWliaXlreGFsOWViOHRqdHRlZ2oxZmVxd3ZxZmp1eHppMDNncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sh11BmCf8HY8F0c5GN/giphy.gif" alt="GIF Ếch Toilet">
+</div>
 
 <script>
     // CODE YOUTUBE API (ĐÃ CẬP NHẬT NHẠC)
