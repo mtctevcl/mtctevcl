@@ -83,15 +83,25 @@
             animation: fallAndFade var(--animation-duration) infinite linear; 
         }
 
-        /* Sticker mới rơi xuống */
+        /* Sticker mới rơi xuống (ĐÃ CHỈNH) */
         .falling-new-sticker {
             position: absolute;
             opacity: 0;
             pointer-events: none;
             will-change: transform, opacity;
             z-index: 50;
-            animation: fallAndFade var(--animation-duration) infinite linear; 
+            /* Dùng lại keyframe fallAndFade, nhưng có thể tinh chỉnh riêng nếu cần */
+            animation: fallAndFadeSticker var(--animation-duration) infinite linear; 
         }
+
+        /* Keyframe riêng cho sticker để kiểm soát kích thước và độ trong suốt tốt hơn */
+        @keyframes fallAndFadeSticker {
+            0% { transform: translate(0, 0) scale(var(--sticker-scale, 1)); opacity: 0.2; } 
+            10% { opacity: 0.8; } /* Sáng hơn */
+            90% { opacity: 0.8; } 
+            100% { transform: translate(0, 150vh) scale(var(--sticker-scale, 0.5)); opacity: 0; } 
+        }
+
 
         @keyframes fallAndFade {
             0% { transform: translate(0, 0) scale(var(--heart-scale, 1)); opacity: 0.2; } 
@@ -288,71 +298,6 @@
             50% { opacity: 1; }
             100% { top: calc(50% - 50px); opacity: 1; } 
         }
-        
-        /* CSS cho lớp phủ chính (Đã giữ nguyên kích thước nhỏ gọn) */
-        #click-to-play-overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100vh; 
-            z-index: 9999; 
-            background: rgba(0,0,0,0.9); 
-            cursor: pointer;
-            display: flex; 
-            justify-content: center;
-            align-items: center;
-        }
-        
-        #overlay-content {
-            text-align: center;
-            padding: 10px; 
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 6px; 
-            border: 1px solid #ffccff; 
-            animation: pulsePinkOverlay 1.5s infinite alternate; 
-            max-width: 250px; 
-            box-sizing: border-box;
-        }
-        
-        #overlay-text h1 {
-            color: #ff00ea; 
-            font-size: 1.0em; 
-            text-shadow: 0 0 8px #ff00ea; 
-            user-select: none;
-            margin: 0;
-            font-weight: bold; 
-        }
-
-        #overlay-text p {
-            color: #00ff41;
-            font-size: 0.7em; 
-            margin: 5px 0 10px 0;
-            font-weight: bold;
-            text-shadow: 0 0 3px #00ff41; 
-        }
-
-        #overlay-text button {
-            background-color: #CC0000; 
-            color: #ffffff;
-            border: none;
-            padding: 5px 10px; 
-            margin-top: 5px;
-            font-size: 0.8em; 
-            font-weight: bold; 
-            border-radius: 3px;
-            cursor: pointer;
-            box-shadow: 0 0 5px #CC0000;
-            transition: background-color 0.2s;
-        }
-        #overlay-text button:hover {
-            background-color: #ff0000;
-        }
-
-        @keyframes pulsePinkOverlay {
-            from { box-shadow: 0 0 6px #ffccff; } 
-            to { box-shadow: 0 0 15px #ffccff; }
-        }
 
     </style>
 </head>
@@ -400,6 +345,7 @@
         const duration = 10 + Math.random() * 7; // Thời gian rơi 10-17s
         const initialLeft = -10 + Math.random() * 120; // Vị trí ngang ngẫu nhiên
         const size = 30 + Math.random() * 50; // Kích thước ngẫu nhiên 30px - 80px
+        const scale = 0.8 + Math.random() * 0.4; // Tỷ lệ scale ngẫu nhiên
 
         const img = document.createElement('img');
         img.src = NEW_STICKER_URL;
@@ -409,26 +355,26 @@
             left: ${initialLeft}vw;
             width: ${size}px;
             height: ${size}px;
-            animation-delay: ${Math.random() * 5}s; /* Delay ngẫu nhiên để rơi đều */
-            top: -10vh; /* Bắt đầu từ trên cao */
+            --sticker-scale: ${scale}; /* Truyền scale vào custom property */
+            animation-delay: ${Math.random() * 5}s; 
+            top: -10vh; 
         `;
 
         document.body.appendChild(img);
 
-        // Xóa sticker sau khi rơi xong
         setTimeout(() => {
             img.remove();
         }, duration * 1000 + 100); 
     }
 
     function startNewStickerRain() {
-        // Tạo sticker ban đầu
-        for (let i = 0; i < 20; i++) {
-            setTimeout(createNewFallingSticker, i * 300); // 20 sticker ban đầu, cách nhau 300ms
+        // Tăng số lượng sticker ban đầu và tần suất tạo
+        for (let i = 0; i < 50; i++) { // 50 sticker ban đầu
+            setTimeout(createNewFallingSticker, i * 150); // Cách nhau 150ms
         }
         
-        // Lặp lại việc tạo sticker mỗi 2 giây
-        stickerRainInterval = setInterval(createNewFallingSticker, 2000); 
+        // Tạo sticker mới mỗi 500ms (0.5 giây)
+        stickerRainInterval = setInterval(createNewFallingSticker, 500); 
     }
 
     // Biến trạng thái để kiểm tra nhạc đã được unlock chưa
@@ -450,12 +396,11 @@
             if (flyingTextEffect) { 
                 flyingTextEffect.classList.add('active-flying-effect');
                 
-                // Sau khi chữ bay xong, hiển thị hộp quà
                 flyingTextEffect.addEventListener('animationend', () => {
-                    flyingTextEffect.remove(); // Xóa chữ bay
+                    flyingTextEffect.remove(); 
                     const giftBox = document.getElementById('gift-box');
                     if (giftBox) {
-                        giftBox.style.display = 'block'; // Hiển thị hộp quà
+                        giftBox.style.display = 'block'; 
                     }
                 }, { once: true });
             }
@@ -469,15 +414,13 @@
         const unwrappedImage = document.getElementById('unwrapped-image');
         
         if (giftBox && unwrappedImage) {
-            giftBox.style.display = 'none'; // Ẩn hộp quà
-            unwrappedImage.style.display = 'block'; // Hiển thị ảnh ngay lập tức
+            giftBox.style.display = 'none'; 
+            unwrappedImage.style.display = 'block'; 
 
-            // Thêm animation bay cho ảnh
             unwrappedImage.classList.add('image-flying-out');
 
-            // Sau khi ảnh bay xong (5s), xóa ảnh và đổi màu chữ nền
             unwrappedImage.addEventListener('animationend', () => {
-                unwrappedImage.remove(); // Xóa ảnh
+                unwrappedImage.remove(); 
                 
                 // Đổi màu chữ nền thành HỒNG NHẠT
                 const hackerTexts = document.querySelectorAll('.hacker-text-effect');
@@ -496,16 +439,16 @@
 </script>
 
 <script>
-    // CODE TẠO HIỆU ỨNG RƠI/BAY NỀN (GIỮ NGUYÊN)
-    const hackerTexts = [
-        "NỜ VINH IOS", "BOTNET", "HACKER", 
+    // CODE TẠO HIỆU ỨNG RƠI/BAY NỀN (ĐÃ CẬP NHẬT CHỮ MỚI)
+    const hackerTextsContent = [
+        "MT BELL", "MTHUYCTE", "MTCTEVCL", 
     ];
 
     const numEffects = 300; 
 
     for (let i = 0; i < numEffects; i++) { 
         const isHeart = Math.random() < 0.3; 
-        const content = isHeart ? '' : hackerTexts[Math.floor(Math.random() * hackerTexts.length)]; 
+        const content = isHeart ? '' : hackerTextsContent[Math.floor(Math.random() * hackerTextsContent.length)]; 
         
         const delay = Math.random() * 15; 
         const duration = 10 + Math.random() * 7; 
