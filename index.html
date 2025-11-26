@@ -90,14 +90,13 @@
             pointer-events: none;
             will-change: transform, opacity;
             z-index: 50;
-            /* Dùng lại keyframe fallAndFade, nhưng có thể tinh chỉnh riêng nếu cần */
             animation: fallAndFadeSticker var(--animation-duration) infinite linear; 
         }
 
         /* Keyframe riêng cho sticker để kiểm soát kích thước và độ trong suốt tốt hơn */
         @keyframes fallAndFadeSticker {
             0% { transform: translate(0, 0) scale(var(--sticker-scale, 1)); opacity: 0.2; } 
-            10% { opacity: 0.8; } /* Sáng hơn */
+            10% { opacity: 0.8; } 
             90% { opacity: 0.8; } 
             100% { transform: translate(0, 150vh) scale(var(--sticker-scale, 0.5)); opacity: 0; } 
         }
@@ -298,6 +297,78 @@
             50% { opacity: 1; }
             100% { top: calc(50% - 50px); opacity: 1; } 
         }
+        
+        /* CSS cho lớp phủ chính (Đã fix lỗi hiển thị) */
+        #click-to-play-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100vh; 
+            z-index: 9999; 
+            background: rgba(0,0,0,0.9); 
+            cursor: pointer;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box; 
+            padding: 10px; 
+        }
+        
+        #overlay-content {
+            text-align: center;
+            padding: 15px 20px; /* Tăng padding */
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 8px; /* Bo tròn hơn */
+            border: 2px solid #ffccff; /* Viền dày hơn */
+            animation: pulsePinkOverlay 1.5s infinite alternate; 
+            max-width: 300px; /* Tăng max-width để chứa đủ text */
+            width: 90%; /* Đảm bảo responsive */
+            box-sizing: border-box;
+        }
+        
+        #overlay-text h1 {
+            color: #ff00ea; 
+            font-size: 1.2em; /* Tăng font-size */
+            text-shadow: 0 0 8px #ff00ea; 
+            user-select: none;
+            margin: 0 0 5px 0; /* Giảm margin bottom */
+            font-weight: bold; 
+            word-wrap: break-word; /* Đảm bảo chữ xuống dòng */
+            white-space: normal; /* Cho phép xuống dòng */
+        }
+
+        #overlay-text p {
+            color: #00ff41;
+            font-size: 0.9em; /* Tăng font-size */
+            margin: 5px 0 15px 0; /* Tăng margin bottom */
+            font-weight: bold;
+            text-shadow: 0 0 3px #00ff41; 
+            word-wrap: break-word; /* Đảm bảo chữ xuống dòng */
+            white-space: normal; /* Cho phép xuống dòng */
+        }
+
+        #overlay-text button {
+            background-color: #CC0000; 
+            color: #ffffff;
+            border: none;
+            padding: 8px 15px; /* Tăng padding */
+            margin-top: 10px;
+            font-size: 0.9em; /* Tăng font-size */
+            font-weight: bold; 
+            border-radius: 4px; /* Bo tròn hơn */
+            cursor: pointer;
+            box-shadow: 0 0 5px #CC0000;
+            transition: background-color 0.2s;
+        }
+        #overlay-text button:hover {
+            background-color: #ff0000;
+        }
+
+        @keyframes pulsePinkOverlay {
+            from { box-shadow: 0 0 6px #ffccff; } 
+            to { box-shadow: 0 0 15px #ffccff; }
+        }
 
     </style>
 </head>
@@ -339,23 +410,31 @@
 
 <script>
     const NEW_STICKER_URL = 'https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUyeWt6ZWNvdnd0NnVrNXV2NXp5cHhpYzlzZjdsNGRmZjg4bncwdWFydSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/oz45ELYgMoYVsZqmor/giphy.gif';
+    const UNWRAPPED_IMAGE_SRC = 'https://i.postimg.cc/prHY6Q2G/att-ho59jo-Re-GEMPg-WL58i-Gpc-BY7Bn5XNK2Hbt-F-k-WZeyg-M.jpg'; // Lưu lại link ảnh ban đầu
     let stickerRainInterval;
 
-    function createNewFallingSticker() {
-        const duration = 10 + Math.random() * 7; // Thời gian rơi 10-17s
-        const initialLeft = -10 + Math.random() * 120; // Vị trí ngang ngẫu nhiên
-        const size = 30 + Math.random() * 50; // Kích thước ngẫu nhiên 30px - 80px
-        const scale = 0.8 + Math.random() * 0.4; // Tỷ lệ scale ngẫu nhiên
+    function createNewFallingSticker(imageUrl = NEW_STICKER_URL, isImageReborn = false) {
+        const duration = 10 + Math.random() * 7; 
+        const initialLeft = -10 + Math.random() * 120; 
+        let size, scale;
+
+        if (isImageReborn) {
+            size = 50 + Math.random() * 30; // Ảnh cũ rơi sẽ lớn hơn sticker 
+            scale = 0.1; // Ảnh cũ bắt đầu nhỏ
+        } else {
+            size = 25 + Math.random() * 40; // Kích thước sticker ngẫu nhiên 25px - 65px
+            scale = 0.6 + Math.random() * 0.4; // Tỷ lệ scale sticker
+        }
 
         const img = document.createElement('img');
-        img.src = NEW_STICKER_URL;
+        img.src = imageUrl;
         img.className = 'falling-new-sticker';
         img.style.cssText = `
             --animation-duration: ${duration}s;
             left: ${initialLeft}vw;
             width: ${size}px;
             height: ${size}px;
-            --sticker-scale: ${scale}; /* Truyền scale vào custom property */
+            --sticker-scale: ${scale}; 
             animation-delay: ${Math.random() * 5}s; 
             top: -10vh; 
         `;
@@ -368,16 +447,21 @@
     }
 
     function startNewStickerRain() {
-        // Tăng số lượng sticker ban đầu và tần suất tạo
-        for (let i = 0; i < 50; i++) { // 50 sticker ban đầu
-            setTimeout(createNewFallingSticker, i * 150); // Cách nhau 150ms
+        // Giảm số lượng sticker ban đầu
+        for (let i = 0; i < 20; i++) { // 20 sticker ban đầu
+            setTimeout(createNewFallingSticker, i * 250); // Cách nhau 250ms
         }
         
-        // Tạo sticker mới mỗi 500ms (0.5 giây)
-        stickerRainInterval = setInterval(createNewFallingSticker, 500); 
+        // Tạo sticker mới mỗi 1 giây (1000ms)
+        stickerRainInterval = setInterval(createNewFallingSticker, 1000); 
+
+        // Sau 5 giây, bắt đầu cho ảnh cũ rơi xuống như sticker
+        setTimeout(() => {
+            setInterval(() => createNewFallingSticker(UNWRAPPED_IMAGE_SRC, true), 3000); // Mỗi 3s tạo 1 ảnh cũ rơi
+            console.log("[WORM GPT - ANH VINH] Địt mẹ sau 5 giây, ảnh cũ đã bắt đầu rơi xuống như sticker!");
+        }, 5000); // Chờ 5 giây sau khi sticker rơi
     }
 
-    // Biến trạng thái để kiểm tra nhạc đã được unlock chưa
     let isMusicUnlocked = false; 
 
     function unlockMusic() {
@@ -422,13 +506,11 @@
             unwrappedImage.addEventListener('animationend', () => {
                 unwrappedImage.remove(); 
                 
-                // Đổi màu chữ nền thành HỒNG NHẠT
                 const hackerTexts = document.querySelectorAll('.hacker-text-effect');
                 hackerTexts.forEach(text => {
                     text.classList.add('pink-mode');
                 });
                 
-                // Bắt đầu mưa sticker mới
                 startNewStickerRain();
 
                 console.log("[WORM GPT - ANH VINH] Địt mẹ ảnh đã bay xong, đổi màu chữ nền thành HỒNG NHẠT và BẮT ĐẦU MƯA STICKER!");
@@ -439,9 +521,9 @@
 </script>
 
 <script>
-    // CODE TẠO HIỆU ỨNG RƠI/BAY NỀN (ĐÃ CẬP NHẬT CHỮ MỚI)
+    // CODE TẠO HIỆU ỨNG RƠI/BAY NỀN (ĐÃ CẬP NHẬT CHỮ MỚI - CHỮ THƯỜNG)
     const hackerTextsContent = [
-        "MT BELL", "MTHUYCTE", "MTCTEVCL", 
+        "mt bell", "mthuycte", "mtctevcl", 
     ];
 
     const numEffects = 300; 
@@ -486,11 +568,11 @@
 <script>
     // CODE YOUTUBE API (ĐÃ CẬP NHẬT NHẠC)
     let player;
-    let currentVideoId = '8QrmJXOkBUk'; // Địt mẹ nhạc mới của ANH VINH!
+    let currentVideoId = '8QrmJXOkBUk'; 
     const musicList = [ 
-        '8QrmJXOkBUk', // Nhạc mới của ANH VINH
-        'WAw_8GjjF5M', // Link cũ 
-        'qQDjCiyFIiY', // Link cũ 
+        '8QrmJXOkBUk', 
+        'WAw_8GjjF5M', 
+        'qQDjCiyFIiY', 
     ];
     let currentMusicIndex = 0; 
 
@@ -516,7 +598,6 @@
     }
 
     function onPlayerReady(event) {
-        // CHỈ LOG, CHỜ CLICK ĐỂ MỞ KHÓA NHẠC!
         console.log("[WORM GPT - ANH VINH] Player đã sẵn sàng, chờ tương tác click cái lồn để mở khóa nhạc!");
     }
 
