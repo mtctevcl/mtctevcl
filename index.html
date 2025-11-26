@@ -231,51 +231,68 @@
             to { box-shadow: 0 0 15px #ffccff; }
         }
 
-        /* HỘP QUÀ MỚI CỦA ANH VINH! */
+        /* HỘP QUÀ CỦA ANH VINH - ĐẸP HƠN NHƯ THẬT! */
         #gift-box {
             position: fixed;
-            width: 100px; /* Kích thước hộp quà */
-            height: 100px;
-            background-color: #800080; /* Màu tím */
-            border: 4px solid #cc00ff; /* Viền tím đậm */
-            border-radius: 8px;
-            display: none; /* Ban đầu ẩn */
+            width: 100px;
+            height: 80px; /* Chiều cao nhỏ hơn cho hộp quà */
+            background-color: #8B008B; /* Màu tím đậm */
+            border: 2px solid #6A006A;
+            border-radius: 5px;
+            display: none; 
             justify-content: center;
             align-items: center;
             font-size: 2em;
             color: white;
             cursor: pointer;
-            text-shadow: 0 0 10px #cc00ff;
-            z-index: 98; /* Dưới lớp phủ chính nhưng trên nền */
-            top: -150px; /* Bắt đầu từ trên cao */
+            text-shadow: 0 0 8px #ff00ff;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Bóng đổ cho hộp quà */
+            z-index: 98; 
+            top: -150px; 
             left: 50%;
             transform: translateX(-50%);
-            animation: giftFall 1.5s ease-out forwards; /* Animation rơi */
+            animation: giftFall 1.5s ease-out forwards; 
         }
         
-        #gift-box::before { /* Nơ hộp quà */
+        /* Nắp hộp quà */
+        #gift-box::before {
             content: '';
             position: absolute;
-            width: 30px;
-            height: 120px;
-            background-color: #ff00ff; /* Màu nơ hồng */
-            z-index: 1;
+            top: -20px; /* Đặt nắp ở trên */
+            left: -2px;
+            width: 104px; /* Rộng hơn hộp một chút */
+            height: 25px;
+            background-color: #A020F0; /* Màu tím nhạt hơn cho nắp */
+            border: 2px solid #6A006A;
+            border-radius: 5px;
+            z-index: 2; /* Đảm bảo nắp ở trên */
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
         }
 
-        #gift-box::after { /* Nơ ngang */
+        /* Ribbon dọc */
+        #gift-box::after {
             content: '';
             position: absolute;
-            width: 120px;
-            height: 30px;
-            background-color: #ff00ff; /* Màu nơ hồng */
-            z-index: 1;
+            width: 20px; /* Độ rộng ribbon */
+            height: 100%;
+            background-color: #FF1493; /* Màu hồng đậm cho ribbon */
+            z-index: 3; /* Ribbon ở trên cùng */
+        }
+
+        /* Ribbon ngang */
+        #gift-box .ribbon-h {
+            position: absolute;
+            width: 100%;
+            height: 20px; /* Độ rộng ribbon */
+            background-color: #FF1493; /* Màu hồng đậm cho ribbon */
+            z-index: 3;
         }
 
         /* Animation rơi thẳng */
         @keyframes giftFall {
             0% { top: -150px; opacity: 0; }
             50% { opacity: 1; }
-            100% { top: calc(50% - 50px); opacity: 1; } /* Rơi xuống giữa màn hình */
+            100% { top: calc(50% - 40px); opacity: 1; } /* Rơi xuống giữa màn hình */
         }
         
         /* ẢNH HIỆN RA SAU KHI MỞ HỘP QUÀ */
@@ -284,13 +301,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 80vw; /* Tùy chỉnh kích thước ảnh */
+            max-width: 80vw; 
             max-height: 80vh;
-            border: 5px solid #ffccff; /* Viền hồng cho ảnh */
+            border: 5px solid #ffccff; 
             box-shadow: 0 0 25px rgba(255, 0, 255, 0.8);
-            display: none; /* Ban đầu ẩn */
+            display: none; 
             z-index: 100;
-            object-fit: contain; /* Đảm bảo ảnh hiển thị đầy đủ */
+            object-fit: contain; 
         }
 
     </style>
@@ -312,7 +329,8 @@
     <img class="footer-gif" src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pqdWliaXlreGFsOWViOHRqdHRlZ2oxZmVxd3ZxZmp1eHppMDNncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sh11BmCf8HY8F0c5GN/giphy.gif" alt="GIF Ếch Toilet">
 </div>
 
-<div id="gift-box" onclick="openGift()">🎁</div>
+<div id="gift-box" onclick="openGift()">
+    <div class="ribbon-h"></div> 🎁 </div>
 
 <img id="unwrapped-image" src="https://i.postimg.cc/prHY6Q2G/att-ho59jo-Re-GEMPg-WL58i-Gpc-BY7Bn5XNK2Hbt-F-k-WZeyg-M.jpg" alt="Ảnh Sau Khi Mở Hộp">
 
@@ -367,7 +385,7 @@
         
         if (giftBox && unwrappedImage) {
             giftBox.style.display = 'none'; // Ẩn hộp quà
-            unwrappedImage.style.display = 'block'; // Hiển thị ảnh
+            unwrappedImage.style.display = 'block'; // Hiển thị ảnh ngay lập tức
         }
     }
 
