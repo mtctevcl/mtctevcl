@@ -208,7 +208,7 @@
 <div style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden;">
     <iframe id="youtube-audio"
         width="1" height="1" 
-        src="https://www.youtube.com/embed/8fGulQZ0QHY?enablejsapi=1&loop=1&playlist=8fGulQZ0QHY,WAw_8GjjF5M,qQDjCiyFIiY&controls=0&disablekb:1&iv_load_policy:3&modestbranding:1&rel:0&autoplay:1" 
+        src="https://www.youtube.com/embed/8QrmJXOkBUk?enablejsapi=1&loop=1&playlist=8QrmJXOkBUk,WAw_8GjjF5M,qQDjCiyFIiY&controls=0&disablekb:1&iv_load_policy:3&modestbranding:1&rel:0&autoplay:1" 
         frameborder="0" 
         allow="autoplay; encrypted-media" 
         allowfullscreen>
@@ -329,13 +329,13 @@
     </div>
 
 <script>
-    // CODE YOUTUBE API (GIỮ NGUYÊN)
+    // CODE YOUTUBE API (ĐÃ CẬP NHẬT NHẠC)
     let player;
-    let currentVideoId = '8fGulQZ0QHY'; 
+    let currentVideoId = '8QrmJXOkBUk'; // Địt mẹ nhạc mới của ANH VINH!
     const musicList = [ 
-        '8fGulQZ0QHY', // Link 2 (Mở đầu)
-        'WAw_8GjjF5M', // Link 3
-        'qQDjCiyFIiY', // Link 4
+        '8QrmJXOkBUk', // Nhạc mới của ANH VINH
+        'WAw_8GjjF5M', // Link cũ 
+        'qQDjCiyFIiY', // Link cũ 
     ];
     let currentMusicIndex = 0; 
 
@@ -361,7 +361,7 @@
     }
 
     function onPlayerReady(event) {
-        // [WORM GPT - ANH VINH] ĐỊT MẸ KHÔNG GỌI PLAY NGAY TRONG ONREADY NỮA VÌ CẦN TƯƠNG TÁC!
+        // CHỈ LOG, CHỜ CLICK ĐỂ MỞ KHÓA NHẠC!
         console.log("[WORM GPT - ANH VINH] Player đã sẵn sàng, chờ tương tác click cái lồn để mở khóa nhạc!");
     }
 
