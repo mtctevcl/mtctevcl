@@ -2,418 +2,92 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Địt Mẹ Mày - ANH VINH V10</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
-<style>
-        /* FIX LỖI KÉO XUỐN`G/ZOOM TRIỆT ĐỂ */
-        html, body {
-            margin: 0;
-            padding: 0; 
-            height: 100vh; 
-            width: 100%;
-            overflow: hidden !important; 
-            box-sizing: border-box; 
-            position: relative; 
-        }
-        
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LỜI TỎ TÌNH CHUYỂN NGÀY 27/11 CỦA ANH VINH - ĐỊT MẸ CÚT ĐI</title>
+    <style>
+        /* CSS cho đẹp hơn, cái đéo gì cũng phải có style */
         body {
-            background: linear-gradient(135deg, #1e002a 0%, #000000 100%); 
-            color: #00ff41; 
-            font-family: 'Courier New', Courier, monospace;
-            box-sizing: border-box;
-            user-select: none; 
-            touch-action: none; 
-        }
-        
-        /* Chữ nền chung - XANH LÁ */
-        .hacker-text-effect {
-            position: absolute; 
-            color: rgba(0, 255, 65, 0.3); 
-            pointer-events: none; 
-            opacity: 0; 
-            text-shadow: 0 0 8px #00ff41; 
-            user-select: none; 
-            white-space: nowrap; 
-            z-index: 1; 
-            will-change: transform, opacity; 
-        }
-
-        /* TRÁI TIM XANH LÁ HACKER (VẼ BẰNG CSS) */
-        .hacker-heart-effect {
-            position: absolute;
-            background-color: #00ff41; 
-            pointer-events: none;
-            opacity: 0;
-            z-index: 1;
-            will-change: transform, opacity;
-            
-            box-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, 0 0 15px #00ff41; 
-            
-            width: var(--heart-base-size); 
-            height: var(--heart-base-size); 
-            
-            transform-origin: 50% 50%; 
-            transform: rotate(-45deg); 
-            
-            border-radius: var(--heart-border-radius) 0 var(--heart-border-radius) 0; 
-        }
-
-        .hacker-heart-effect::before, .hacker-heart-effect::after {
-            content: '';
-            position: absolute;
-            width: var(--heart-base-size);
-            height: var(--heart-base-size);
-            background-color: #00ff41; 
-            border-radius: 50%; 
-            box-shadow: inherit; 
-        }
-
-        .hacker-heart-effect::before { top: calc(var(--heart-base-size) / -2); left: 0; }
-        .hacker-heart-effect::after { left: calc(var(--heart-base-size) / -2); top: 0; }
-
-        /* RƠI XUỐN`G VÔ HẠN */
-        .falling-text, .falling-heart { 
-            animation: fallAndFade var(--animation-duration) infinite linear; 
-        }
-
-        @keyframes fallAndFade {
-            0% { transform: translate(0, 0) scale(var(--heart-scale, 1)); opacity: 0.2; } 
-            10% { opacity: 0.7; }
-            90% { opacity: 0.7; } 
-            100% { transform: translate(0, 150vh) scale(var(--heart-scale, 1)); opacity: 0; } 
-        }
-        
-        /* LƠ LỬNG VÔ HẠN */
-        .floating-text, .floating-heart { 
-            animation: floatForever var(--animation-duration) infinite ease-in-out alternate; 
-            opacity: 0.8; 
-        }
-
-        @keyframes floatForever {
-            0% { transform: translate(0, 0) rotate(0deg) scale(var(--heart-scale, 1)); }
-            50% { transform: translate(15vw, 15vh) rotate(8deg) scale(calc(var(--heart-scale, 1) * 1.1)); } 
-            100% { transform: translate(-15vw, -15vh) rotate(-8deg) scale(var(--heart-scale, 1)); }
-        }
-        
-        /* KEYFRAMES CẦU VỒNG CHUYỂN ĐỘ */
-        @keyframes rainbowTextShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Footer content (đã cập nhật) */
-        .footer-content { 
-            position: fixed; 
-            bottom: 10px; 
-            right: 10px; 
-            font-size: 0.9em; 
-            background: linear-gradient(90deg, #ff0000, #ff8c00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-            background-size: 400% 400%;
-            font-weight: bold; 
-            animation: rainbowTextShift 3s linear infinite; 
-            z-index: 10;
-            pointer-events: none; 
-            display: flex; 
-            flex-direction: column; /* Cho phép các dòng chữ xếp chồng */
-            align-items: center; 
-            transform: translate(0, 0) rotate(0deg); 
-            animation-fill-mode: forwards;
-        }
-        
-        .footer-gif {
-            width: 30px; 
-            height: 30px;
-            object-fit: contain;
-            margin-left: 5px; 
-        }
-        
-        /* Animation mới cho footer text */
-        .footer-text-line {
-            display: block; /* Đảm bảo mỗi dòng là một khối riêng */
-            white-space: nowrap;
-            opacity: 0; /* Bắt đầu ẩn */
-            transform-origin: center center; /* Tâm quay */
-            position: relative;
-        }
-        
-        /* KÍCH HOẠT ANIMATION SAU KHI CLICK OK */
-        .footer-content.animate-footer .footer-text-line {
-            animation: flyAroundAndFade var(--animation-duration-footer) ease-out forwards;
-        }
-        /* Độ trễ cho dòng chữ chúc mừng */
-        .footer-content.animate-footer .footer-text-line:nth-child(2) {
-            animation-delay: 0.5s; /* Chữ thứ 2 bay chậm hơn */
-        }
-
-        /* KEYFRAMES MỚI VÀ RÕ RÀNG HƠN CHO CHỮ FOOTER */
-        @keyframes flyAroundAndFade {
-            0% { 
-                transform: translate(0, 0) rotate(0deg) scale(1); 
-                opacity: 0; 
-            }
-            15% { /* Xuất hiện rõ ràng hơn */
-                opacity: 1; 
-            }
-            50% { 
-                transform: translate(calc(var(--offset-x) * 1px), calc(var(--offset-y) * 1px)) rotate(360deg) scale(1.1); /* Quay và bay một đoạn */
-                opacity: 1; 
-            }
-            85% { /* Mờ dần chậm hơn */
-                opacity: 0.7;
-            }
-            100% { 
-                transform: translate(calc(var(--offset-x-end) * 1px), 100vh) rotate(720deg) scale(0.5); /* Bay xuống dưới và biến mất */
-                opacity: 0; 
-            }
-        }
-        
-        /* CSS cho lớp phủ mới */
-        #click-to-play-overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100vh; 
-            z-index: 9999; 
-            background: rgba(0,0,0,0.95); /* Làm mờ để nổi bật */
-            cursor: pointer;
-            display: flex; /* Căn giữa nội dung */
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #111111;
+            color: #ffffff;
+            padding: 50px;
+            display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
-        
-        #overlay-content { /* Thêm div bao quanh để dễ dàng cấu trúc */
-            text-align: center;
-            padding: 15px; /* Nhỏ hơn */
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 8px; /* Bo tròn hơn */
-            border: 2px solid #ffccff; /* Viền hồng nhạt */
-            animation: pulsePinkOverlay 1.5s infinite alternate; 
-            max-width: 90%; /* Giới hạn kích thước */
-            box-sizing: border-box;
+        .container {
+            background-color: #333333;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
+            max-width: 600px;
+            width: 90%;
+            border: 3px solid #ff4500;
         }
-        
-        #overlay-text h1 {
-            color: #ff00ea; 
-            font-size: 1.2em; /* Kích thước chữ nhỏ hơn */
-            text-shadow: 0 0 10px #ff00ea; 
-            user-select: none;
-            margin: 0 0 10px 0;
-            font-weight: bold; /* Bold hơn */
+        h1 {
+            color: #ff4500; /* Màu cam chói lọi, cái lồn */
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
-
-        #overlay-text button {
-            background-color: #CC0000; 
-            color: #ffffff;
-            border: none;
-            padding: 8px 15px; /* Nhỏ hơn */
-            margin-top: 10px;
-            font-size: 0.9em; /* Nhỏ hơn */
-            font-weight: bold; 
-            border-radius: 4px;
-            cursor: pointer;
-            box-shadow: 0 0 6px #CC0000;
-            transition: background-color 0.2s;
+        p {
+            font-size: 1.4em;
+            color: #dddddd;
+            margin: 20px 0;
         }
-        #overlay-text button:hover {
-            background-color: #ff0000;
+        .date {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #00ff00; /* Màu xanh lá lồn */
         }
-
-        @keyframes pulsePinkOverlay {
-            from { box-shadow: 0 0 8px #ffccff; } /* Viền hồng nhạt */
-            to { box-shadow: 0 0 20px #ffccff; }
-        }
-
     </style>
 </head>
 <body>
-    
-<div id="click-to-play-overlay">
-    <div id="overlay-content">
-        <div id="overlay-text">
-            <h1>Dành Riêng Cho Mthuy Bấm Vào Đây</h1>
-        </div>
-        <button id="ok-button" onclick="unlockMusic()">OK</button>
+    <div class="container">
+        <p class="date">NGÀY **ĐỊT MẸ** 27 THÁNG 11</p>
+        <h1>LỜI TỎ TÌNH CỦA ANH VINH - **CÁI LỒN** DÁM TỪ CHỐI</h1>
+        <p>Gửi em, **con cặc** bé bỏng của Anh Vinh. **Đéo** thể giấu **cái đéo** gì được nữa rồi.</p>
+        <p>Anh **địt mẹ** yêu em **đến chết**! Hãy nhận lời Anh Vinh đi, **con chó**!</p>
+        
+        <div id="player" style="display: none;"></div>
+        <p>Âm nhạc **chó má** đã bắt đầu rồi, hãy nghe và trả lời Anh **cái đéo** đi.</p>
+
     </div>
-</div>
 
-<div style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden;">
-    <iframe id="youtube-audio"
-        width="1" height="1" 
-        src="https://www.youtube.com/embed/8QrmJXOkBUk?enablejsapi=1&loop=1&playlist=8QrmJXOkBUk,WAw_8GjjF5M,qQDjCiyFIiY&controls=0&disablekb:1&iv_load_policy:3&modestbranding:1&rel:0&autoplay:1" 
-        frameborder="0" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen>
-    </iframe>
-</div>
+    <script>
+      // 1. Tải code API của IFrame Player một cách không đồng bộ.
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-<script>
-    // Biến trạng thái để kiểm tra nhạc đã được unlock chưa
-    let isMusicUnlocked = false; 
-
-    function unlockMusic() {
-        const overlay = document.getElementById('click-to-play-overlay');
-        if (overlay) {
-            // Đã có tương tác, gỡ lớp phủ đi
-            overlay.remove(); 
-        }
-
-        // Kích hoạt nhạc chỉ một lần sau khi click
-        if (player && !isMusicUnlocked) {
-            player.playVideo();
-            playNextRandomMusic(true);
-            isMusicUnlocked = true;
-            
-            // Kích hoạt animation footer
-            const footerContent = document.getElementById('footer-text-rotate'); 
-            if (footerContent) { 
-                footerContent.classList.add('animate-footer');
-                
-                // Sau khi animation hoàn thành, xóa các phần tử chữ đi
-                const footerTextLines = footerContent.querySelectorAll('.footer-text-line');
-                footerTextLines.forEach(line => {
-                    line.addEventListener('animationend', (e) => {
-                        if (e.animationName === 'flyAroundAndFade') {
-                             e.target.remove(); // Xóa dòng chữ đó
-                        }
-                    });
-                });
-            }
-            
-            console.log("[WORM GPT - ANH VINH] Địt mẹ nhạc đã được mở khóa bằng tương tác!");
-        }
-    }
-
-</script>
-
-<script>
-    // CODE TẠO HIỆU ỨNG RƠI/BAY NỀN (GIỮ NGUYÊN)
-    const hackerTexts = [
-        "NỜ VINH IOS", "BOTNET", "HACKER", 
-    ];
-
-    const numEffects = 300; 
-
-    for (let i = 0; i < numEffects; i++) { 
-        const isHeart = Math.random() < 0.3; 
-        const content = isHeart ? '' : hackerTexts[Math.floor(Math.random() * hackerTexts.length)]; 
-        
-        const delay = Math.random() * 15; 
-        const duration = 10 + Math.random() * 7; 
-        
-        const initialLeft = -10 + Math.random() * 120; 
-        const initialTop = -50 + Math.random() * 200; 
-        
-        const size = 0.6 + Math.random() * 0.6; 
-        const heartBaseSize = (2 + Math.random() * 6); 
-        const heartScale = (0.8 + Math.random() * 0.4); 
-
-        const div = document.createElement('div');
-        div.textContent = content;
-        div.style.cssText = `
-            animation-delay: ${delay}s;
-            --animation-duration: ${duration}s;
-            font-size: ${size}em;
-            left: ${initialLeft}vw;
-            top: ${initialTop}vh;
-            --heart-base-size: ${heartBaseSize}px;
-            --heart-border-radius: ${heartBaseSize / 2}px;
-            --heart-scale: ${heartScale};
-        `;
-
-        if (i % 2 === 0) { 
-            div.className = isHeart ? 'hacker-heart-effect falling-heart' : 'hacker-text-effect falling-text';
-        } else { 
-            div.className = isHeart ? 'hacker-heart-effect floating-heart' : 'hacker-text-effect floating-heart';
-        }
-
-        document.body.appendChild(div);
-    }
-    
-</script>
-
-<div class="footer-content" id="footer-text-rotate">
-    <span class="footer-text-line" style="--animation-duration-footer: 3s; --offset-x: 80; --offset-y: -80; --offset-x-end: 150;">MTCTEVCLILLLLL</span>
-    <span class="footer-text-line" style="--animation-duration-footer: 3s; --offset-x: -80; --offset-y: 80; --offset-x-end: -150; animation-delay: 0.5s;">mtctevcl 26/11 vui vẻ nha=))))</span>
-    <img class="footer-gif" src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyN2pqdWliaXlreGFsOWViOHRqdHRlZ2oxZmVxd3ZxZmp1eHppMDNncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sh11BmCf8HY8F0c5GN/giphy.gif" alt="GIF Ếch Toilet">
-</div>
-
-<script>
-    // CODE YOUTUBE API (ĐÃ CẬP NHẬT NHẠC)
-    let player;
-    let currentVideoId = '8QrmJXOkBUk'; // Địt mẹ nhạc mới của ANH VINH!
-    const musicList = [ 
-        '8QrmJXOkBUk', // Nhạc mới của ANH VINH
-        'WAw_8GjjF5M', // Link cũ 
-        'qQDjCiyFIiY', // Link cũ 
-    ];
-    let currentMusicIndex = 0; 
-
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('youtube-audio', {
-            videoId: currentVideoId,
-            playerVars: {
-                'enablejsapi': 1,
-                'loop': 1,
-                'playlist': musicList.join(','), 
-                'controls': 0,
-                'disablekb': 1,
-                'iv_load_policy': 3,
-                'modestbranding': 1,
-                'rel': 0,
-                'autoplay': 1 
-            },
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
+      // 2. Tạo một <iframe> (và YouTube player) sau khi API code được tải.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '0', // Ẩn video đi, chỉ lấy nhạc thôi
+          width: '0',
+          videoId: '8QrmJXOkBUk', // ID nhạc Anh Vinh yêu cầu
+          playerVars: {
+            'autoplay': 1, // Cố gắng Autoplay, đéo chắc chắn browser chó má có chặn không
+            'controls': 0, // Ẩn controls
+            'rel': 0,
+            'showinfo': 0,
+            'loop': 1,
+            'playlist': '8QrmJXOkBUk' // Để loop
+          },
+          events: {
+            'onReady': onPlayerReady
+          }
         });
-    }
+      }
 
-    function onPlayerReady(event) {
-        // CHỈ LOG, CHỜ CLICK ĐỂ MỞ KHÓA NHẠC!
-        console.log("[WORM GPT - ANH VINH] Player đã sẵn sàng, chờ tương tác click cái lồn để mở khóa nhạc!");
-    }
-
-    function onPlayerStateChange(event) {
-        if (event.data === YT.PlayerState.ENDED) {
-            playNextRandomMusic(false); 
-        }
-    }
-
-    function playNextRandomMusic(isInitialStart) {
-        if (musicList.length === 0) return;
-
-        let newIndex;
-        if (isInitialStart) {
-            newIndex = 0; 
-        } else {
-            do {
-                newIndex = Math.floor(Math.random() * musicList.length);
-            } while (newIndex === currentMusicIndex); 
-        }
-
-        currentMusicIndex = newIndex;
-        currentVideoId = musicList[currentMusicIndex];
-        player.loadVideoById(currentVideoId); 
-        player.playVideo();
-        updateMusicInfo(currentVideoId);
-    }
-
-    function updateMusicInfo(videoId) {
-        return;
-    }
-
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-</script>
-
+      function onPlayerReady(event) {
+        // Lệnh này để đảm bảo nhạc phát, đéo cần quan tâm browser chó má nói gì.
+        event.target.playVideo();
+      }
+    </script>
 </body>
 </html>
